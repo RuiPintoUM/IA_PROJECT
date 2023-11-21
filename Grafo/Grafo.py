@@ -202,14 +202,21 @@ class Graph:
         plt.draw()
         plt.show()
 
-    ####################################33
+    ####################################
     #    add_heuristica   -> define heuristica para cada nodo
-    ################################
+    #    1 heuristica -> Media de combustivel que se gasta nessa cidade
+    #    2 heuristica -> Temporais na cidade
+    #    3 heuristica -> Quantidade de transito
+    ####################################
 
     def add_heuristica(self, n, estima):
         n1 = Node(n)
         if n1 in self.m_nodes:
             self.m_h[n] = estima
+
+
+
+    #def heuristicaCombustivel(self, ):
 
     ##########################################
     #    A*

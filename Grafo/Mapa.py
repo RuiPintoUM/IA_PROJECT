@@ -23,6 +23,51 @@ def fill_graph(g):
 
     g.add_edge("alcochete", "lisboa", 20)
 
+
+#colocar heuristicas em condiçoes
+def heuristicaCombustivel(g):
+    g.add_heuristica("elvas", 270)
+    g.add_heuristica("borba", 250)
+    g.add_heuristica("estremoz", 145)
+    g.add_heuristica("evora", 95)
+    g.add_heuristica("montemor", 70)
+    g.add_heuristica("vendasnovas", 45)
+    g.add_heuristica("arraiolos", 220)
+    g.add_heuristica("alcacer", 140)
+    g.add_heuristica("palmela", 85)
+    g.add_heuristica("almada", 25)
+    g.add_heuristica("alandroal", 180)
+    g.add_heuristica("redondo", 170)
+    g.add_heuristica("monsaraz", 120)
+    g.add_heuristica("barreiro", 30)
+    g.add_heuristica("baixadabanheira", 33)
+    g.add_heuristica("moita", 35)
+    g.add_heuristica("alcochete", 26)
+    g.add_heuristica("lisboa", 0)
+
+#colocar heuristicas em condiçoes
+def heuristicaTemporais(g):
+    g.add_heuristica("elvas", 270)
+    g.add_heuristica("borba", 250)
+    g.add_heuristica("estremoz", 145)
+    g.add_heuristica("evora", 95)
+    g.add_heuristica("montemor", 70)
+    g.add_heuristica("vendasnovas", 45)
+    g.add_heuristica("arraiolos", 220)
+    g.add_heuristica("alcacer", 140)
+    g.add_heuristica("palmela", 85)
+    g.add_heuristica("almada", 25)
+    g.add_heuristica("alandroal", 180)
+    g.add_heuristica("redondo", 170)
+    g.add_heuristica("monsaraz", 120)
+    g.add_heuristica("barreiro", 30)
+    g.add_heuristica("baixadabanheira", 33)
+    g.add_heuristica("moita", 35)
+    g.add_heuristica("alcochete", 26)
+    g.add_heuristica("lisboa", 0)
+
+#colocar heuristicas em condiçoes
+def heuristicaTransito(g):
     g.add_heuristica("elvas", 270)
     g.add_heuristica("borba", 250)
     g.add_heuristica("estremoz", 145)
