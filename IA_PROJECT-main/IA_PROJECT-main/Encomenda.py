@@ -1,12 +1,12 @@
 class Encomenda:
 
-    def __init__(self, id, localChegada, peso, volume, tempoPedido, estafeta, distancia):
+    def __init__(self, id, localChegada, peso, volume, tempoPedido, distancia):
         self.id = id
         self.localChegada = localChegada
         self.peso = float(peso)
         self.volume = float(volume)
         self.tempoPedido = float(tempoPedido)
-        self.estafeta = estafeta
+        #self.estafeta
         self.distancia = float(distancia)
         self.tempoB = self.tempoBicla()
         self.tempoM = self.tempoMota()
@@ -42,6 +42,7 @@ class Encomenda:
             self.tempoReal = self.tempoC
         else:
             self.veiculo = "na"
+            self.tempoReal = "na"
 
     def definePreco(self):
         if(self.veiculo == "Bicicleta"): self.preco = 0.05 * self.distancia

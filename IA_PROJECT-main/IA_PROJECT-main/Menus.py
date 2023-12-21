@@ -1,9 +1,6 @@
-from typing import Any
-
 from Grafo import Graph
 from Mapa import fill_graph, heuristicaCombustivel, heuristicaTemporais, heuristicaTransito
 from Sistema import Sistema
-
 
 class Menus:
     g = Graph()
@@ -33,28 +30,42 @@ class Menus:
             tempoPedido = input("Tempo em que quer receber a Encomenda (0 se não tiver preferência): ")
             local = input("Local onde deseja receber a Encomenda: ")
 
-            (caminho, distancia) = sistema.calculaMelhorCaminho(g, local)
+            resultadoCaminho = sistema.calculaMelhorCaminho(g, local)
 
-            encomenda = sistema.criaEncomenda(local, peso, volume, tempoPedido, distancia)
-
-            if encomenda.veiculo == "na":
-                print("Encomenda não pode ser entregue no tempo pedido.")
-            elif encomenda.estafeta == "na":
-                print("Não há estafetas disponíveis no momento.")
+            if resultadoCaminho is None:
+                print("O sistema não encontrou caminho para o local desejado.")
+                l = input("prima enter para continuar")
             else:
-                confirmacao = input(f"O preço da encomenda é {encomenda.preco}. Deseja aceitar? (S ou N): ")
+                (caminho, distancia) = resultadoCaminho
+                encomenda = sistema.criaEncomenda(local, peso, volume, tempoPedido, distancia)
 
-                if confirmacao == "S".lower():
-                    pass
+                if encomenda.veiculo == "na":
+                    print("Encomenda não pode ser entregue no tempo pedido.")
+                elif encomenda.estafeta == "na":
+                    print("Não há estafetas disponíveis no momento.")
                 else:
+                    confirmacao = input(f"O preço da encomenda é {encomenda.preco}. Deseja aceitar? (S ou N): ")
+
+                    if confirmacao == "S".lower():
+                        pass
+                    else:
+                        sistema.removeEncomenda(encomenda)
+                        l = input("prima enter para voltar atrás")
+                        # chamar menu de saida
+
+                    print("...Encomenda a ser feita no momento...")
+
+                    sistema.respostaPosEncomenda(encomenda, caminho)
+
+                    avaliacao = input("digite a avaliacao do gajo (0 a 5): ")
+
+                    sistema.atribuiAvaliacao(encomenda.estafeta, avaliacao)
+
+                    input(f"Somaclassificaçoes: {encomenda.estafeta.somaClassificacoes}.")
+
+                    input(f"A avaliação média de {encomenda.estafeta.nome} é {sistema.mediaEstafeta(encomenda.estafeta)}.")
+
                     sistema.removeEncomenda(encomenda)
-                    l = input("prima enter para voltar atrás")
-                    # chamar menu de saida
-
-            print("...Encomenda a ser feita no momento...")
-
-            sistema.respostaPosEncomenda(encomenda, caminho)
-            sistema.removeEncomenda(encomenda)
 
             print("\n\n\n\n\n\n")
             l = input("prima enter para continuar")

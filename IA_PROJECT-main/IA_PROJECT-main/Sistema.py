@@ -31,9 +31,6 @@ class Sistema:
         print(f"Encomenda foi entregue de {encomenda.veiculo}.")
         print(f"A distancia percorrida foi de {encomenda.distancia}km.")
 
-
-
-
     def removeEncomenda(self, encomenda):
         if encomenda.id in self.mapEncomendas:
             del self.mapEncomendas[encomenda.id]
@@ -42,6 +39,8 @@ class Sistema:
             if encomenda.id in estafeta.encomenda_ids:
                 estafeta.encomenda_ids.remove(encomenda.id)
 
+        encomenda.estafeta.status = 0
+
     def criaEncomenda(self, local, peso, volume, tempoPedido, distancia):
         # Gera um novo ID para a encomenda
         if not self.mapEncomendas:
@@ -49,9 +48,12 @@ class Sistema:
         else:
             id = max(self.mapEncomendas.keys()) + 1
 
-        estafeta = self.atribuiEncomenda(id)
+        #estafeta = self.atribuiEncomenda(id)
 
-        enc = Encomenda(id, local, peso, volume, tempoPedido, estafeta, distancia)
+        enc = Encomenda(id, local, peso, volume, tempoPedido, distancia)
+
+        if enc.tempoReal != "na":
+            enc.estafeta = self.atribuiEncomenda(id)
 
         self.mapEncomendas[enc.id] = enc
         return enc
@@ -64,7 +66,7 @@ class Sistema:
 
         for nome_estafeta, estafeta in self.mapEstafetas.items():
             if estafeta.status == 0:
-                print("Estafeta encontrado.")
+                print("Encontramos o teu Estafeta")
                 print(estafeta.nome)
                 estafeta.status = 1
                 estafeta.addEncomenda(idEncomenda)
@@ -72,24 +74,43 @@ class Sistema:
 
         return "na"
 
+    def atribuiAvaliacao(self, estafeta, avaliacao):
+        estafeta.somaClassificacoes += int(avaliacao)
+
+    def mediaEstafeta(self, estafeta):
+        return  estafeta.somaClassificacoes / len(estafeta.encomenda_ids)
+
     def calculaMelhorCaminho(self, g, local):
-        (path1, custo1) = g.procura_BFS("lisboa", local)
-        (path2, custo2) = g.procura_DFS("lisboa", local)
-        #(path3, custo3) = g.procura_DFS("lisboa", local) #g.greedy("lisboa", local)
-        #(path4, custo4) = g.procura_DFS("lisboa", local) #g.procura_aStar("lisboa", local)
 
-        custoMin = (min(custo1, custo2))
+        result_BFS = g.procura_BFS("lisboa", local)
+        result_DFS = g.procura_DFS("lisboa", local)
 
-        if custo1 == custoMin:
-            melhorCaminho = path1
-        elif custo2 == custoMin:
-            melhorCaminho = path2
-        #elif custo3 == custoMin:
-        #    melhorCaminho = path3
-        #else:
-        #    melhorCaminho = path4
 
-        return (melhorCaminho, custoMin)
+        if result_BFS and result_DFS is None: return None
+        elif result_BFS is not None and result_DFS is None:
+            (path1, custo1) = result_BFS
+            return (path1, custo1)
+        elif result_DFS is not None and result_BFS is None:
+            (path2, custo2) = result_DFS
+            return (path2, custo2)
+        else:
+            (path1, custo1) = result_BFS
+            (path2, custo2) = result_DFS
+            #(path3, custo3) = g.procura_DFS("lisboa", local) #g.greedy("lisboa", local)
+            #(path4, custo4) = g.procura_DFS("lisboa", local) #g.procura_aStar("lisboa", local)
+
+            custoMin = (min(custo1, custo2))
+
+            if custo1 == custoMin:
+                melhorCaminho = path1
+            elif custo2 == custoMin:
+                melhorCaminho = path2
+            #elif custo3 == custoMin:
+            #    melhorCaminho = path3
+            #else:
+            #    melhorCaminho = path4
+
+            return (melhorCaminho, custoMin)
 
     def adicionarEstafeta(self, nome_estafeta):
         estafeta = Estafeta(nome_estafeta)
