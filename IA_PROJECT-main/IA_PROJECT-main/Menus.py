@@ -2,13 +2,23 @@ from Grafo import Graph
 from Mapa import fill_graph, heuristicaCombustivel, heuristicaTemporais, heuristicaTransito
 from Sistema import Sistema
 
-def menuRankings(sitema):
+
+def menuRankings(sistema, nome):
     print("1 - Top 5 ranking estafetas com mais entregas efetuadas") # incluir posição atual do estafeta no ranking
     print("2 - Top 5 ranking estafetas com mais entregas ecológicas")
     print("3 - Top 5 ranking estafetas com melhor rating")
     print("4 - Sair")
 
-
+    user_input = int(input("Introduza a sua opcao-> "))
+    match user_input:
+        case 1:
+            print()
+        case 2:
+            print()
+        case 3:
+            print()
+        case 4:
+            print(menuEstafeta(sistema, nome))
 
 
 def menuEncomendasEstafeta(sistema, nome):
@@ -17,6 +27,15 @@ def menuEncomendasEstafeta(sistema, nome):
     print("1 - Caminho mais rápido")
     print("2 - Caminho mais ecológico")
     print("3 - Sair")
+
+    user_input = int(input("Introduza a sua opcao-> "))
+    match user_input:
+        case 1:
+            print()
+        case 2:
+            print()
+        case 3:
+            print(menuEstafeta(sistema, nome))
 
 
 def menuEstafeta(sistema, nome):

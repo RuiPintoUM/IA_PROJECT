@@ -126,3 +126,23 @@ class Sistema:
         estafeta = self.mapEstafetas.get(nome)
         
         return estafeta.getEncomendas()
+
+    # --- Queries ---
+
+    def top_ranking_entregas(self):
+        sorted_estafetas = sorted(self.estafetas.items(), key=estafeta.encomenda_ids.len , reverse=True)
+        print(f"Top 5 estafetas com mais entregas efetuadas:")
+        for i, (estafeta, dados) in enumerate(sorted_estafetas[:5], 1):
+            print(f"{i}. {estafeta} - Entregas: {dados['entregas']}")
+
+    def top_ranking_ecologicas(self, n=5):
+        sorted_estafetas = sorted(self.estafetas.items(), key=lambda x: x[1]['entregas_ecologicas'], reverse=True)
+        print(f"Top {n} estafetas com mais entregas ecológicas:")
+        for i, (estafeta, dados) in enumerate(sorted_estafetas[:n], start=1):
+            print(f"{i}. {estafeta} - Entregas Ecológicas: {dados['entregas_ecologicas']}")
+
+    def top_ranking_rating(self, n=5):
+        sorted_estafetas = sorted(self.estafetas.items(), key=lambda x: x[1]['rating'], reverse=True)
+        print(f"Top {n} estafetas com melhor rating:")
+        for i, (estafeta, dados) in enumerate(sorted_estafetas[:n], start=1):
+            print(f"{i}. {estafeta} - Rating: {dados['rating']}")
