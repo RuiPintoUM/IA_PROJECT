@@ -2,6 +2,63 @@ from Grafo import Graph
 from Mapa import fill_graph, heuristicaCombustivel, heuristicaTemporais, heuristicaTransito
 from Sistema import Sistema
 
+def menuRankings(sitema):
+    print("1 - Top 5 ranking estafetas com mais entregas efetuadas") # incluir posição atual do estafeta no ranking
+    print("2 - Top 5 ranking estafetas com mais entregas ecológicas")
+    print("3 - Top 5 ranking estafetas com melhor rating")
+    print("4 - Sair")
+
+
+
+
+def menuEncomendasEstafeta(sistema, nome):
+    print(sistema.mostrarListaEncomendas(nome))
+    print("--- Escolha o modo de entrega ---")
+    print("1 - Caminho mais rápido")
+    print("2 - Caminho mais ecológico")
+    print("3 - Sair")
+
+
+def menuEstafeta(sistema, nome):
+    print("--- Menu Estafeta ---")
+    print("1 - Verificar encomendas associadads")
+    print("2 - Rankings")
+    print("3 - Alterar Status")
+    print("4 - Sair")
+
+    user_input = int(input("Introduza a sua opcao-> "))
+
+    match user_input:
+        case 1:
+            menuEncomendasEstafeta(sistema, nome)
+        case 2:
+            menuRankings(sistema)
+        case 3:
+            print("por fazer")
+        case 4:
+            menuEstafetaLogin(sistema)
+
+
+def menuEstafetaLogin(sistema):
+    print("--- Menu Login Estafeta ---")
+    print("1 - Login")
+    print("2 - Registar novo estafeta")
+    print("3 - Sair")
+
+    user_input = int(input("Introduza a sua opcao-> "))
+    match user_input:
+        case 1:
+            nome_estafeta = input("Introduza o nome do estafeta-> ")
+            if sistema.loginEstafeta(nome_estafeta):
+                menuEstafeta(sistema, nome_estafeta)
+            else:
+                print("Estafeta não registado")
+                menuEstafetaLogin(sistema)
+        case 2:
+            nome_estafeta = input("Introduza o nome do estafeta-> ")
+            sistema.adicionarEstafeta(nome_estafeta)
+        case 3:
+            print("AGUEM ESCREVA AQUI O CÓDIGO, HUGO SECA NAO SABE FAZER MENUS") # -------------------------------------------------------------
 class Menus:
     g = Graph()
     fill_graph(g)
@@ -72,11 +129,11 @@ class Menus:
 
         elif saida == 2:  # interface estafeta
 
-            print("\n\n\n\n\n\n")
-            l = input("prima enter para continuar")
+            menuEstafetaLogin(sistema)
 
         else:
 
             print("you didn't add anything")
             print("\n\n\n\n\n\n")
             l = input("prima enter para continuar")
+

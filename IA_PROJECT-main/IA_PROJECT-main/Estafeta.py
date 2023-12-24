@@ -7,3 +7,6 @@ class Estafeta:
 
     def addEncomenda(self, id_encomenda):
         self.encomenda_ids.append(id_encomenda)
+
+    def getEncomendas(self):
+        return self.encomenda_ids

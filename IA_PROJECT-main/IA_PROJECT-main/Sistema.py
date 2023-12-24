@@ -113,11 +113,16 @@ class Sistema:
             return (melhorCaminho, custoMin)
 
     def adicionarEstafeta(self, nome_estafeta):
-        estafeta = Estafeta(nome_estafeta)
+        estafeta = Estafeta(nome_estafeta,0)
         self.mapEstafetas[nome_estafeta] = estafeta
 
-
-
-
-
-
+    def loginEstafeta(self, nome):
+        if nome in self.mapEstafetas:
+            return True
+        else:
+            return False
+        
+    def mostrarListaEncomendas(self, nome):
+        estafeta = self.mapEstafetas.get(nome)
+        
+        return estafeta.getEncomendas()
