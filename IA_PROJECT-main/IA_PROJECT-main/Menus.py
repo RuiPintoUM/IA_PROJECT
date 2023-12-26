@@ -51,7 +51,7 @@ def menuEstafeta(sistema, nome):
         case 1:
             menuEncomendasEstafeta(sistema, nome)
         case 2:
-            menuRankings(sistema)
+            menuRankings(sistema, nome)
         case 3:
             print("por fazer")
         case 4:
@@ -75,13 +75,16 @@ def menuEstafetaLogin(sistema):
                 menuEstafetaLogin(sistema)
         case 2:
             nome_estafeta = input("Introduza o nome do estafeta-> ")
-            sistema.adicionarEstafeta(nome_estafeta)
+            sistema.adicionarEstafeta(nome_estafeta, 0)
+            menuEstafetaLogin(sistema)
         case 3:
             print("AGUEM ESCREVA AQUI O CÓDIGO, HUGO SECA NAO SABE FAZER MENUS") # -------------------------------------------------------------
 class Menus:
     g = Graph()
     fill_graph(g)
     sistema = Sistema()
+
+    sistema.iniciaEstafetas()
 
     saida = 1
 
@@ -98,8 +101,6 @@ class Menus:
             print("saindo.......")
 
         elif saida == 1:  # interface cliente
-
-            sistema.iniciaEstafetas()
 
             peso = input("Peso da Encomenda: ")
             volume = input("Volume da Encomenda: ")

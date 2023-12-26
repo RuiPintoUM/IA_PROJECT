@@ -10,19 +10,6 @@ class Sistema:
         self.mapEstafetas = {}  # Dicionário para armazenar estafetas
         self.mapEncomendas = {}  # Dicionário para armazenar encomendas
 
-    def iniciaEstafetas(self):
-        estafeta1 = Estafeta(nome="Jefferson", status=1)
-        estafeta2 = Estafeta(nome="Walson", status=1)
-        estafeta3 = Estafeta(nome="Valter", status=0)
-        estafeta4 = Estafeta(nome="Flipe", status=0)
-
-        self.mapEstafetas = {
-            1: estafeta1,
-            2: estafeta2,
-            3: estafeta3,
-            4: estafeta4
-        }
-
     def respostaPosEncomenda(self,encomenda, caminho):
         print("Caminho: ")
         for node in caminho:
@@ -112,8 +99,8 @@ class Sistema:
 
             return (melhorCaminho, custoMin)
 
-    def adicionarEstafeta(self, nome_estafeta):
-        estafeta = Estafeta(nome_estafeta,0)
+    def adicionarEstafeta(self, nome_estafeta, status):
+        estafeta = Estafeta(nome_estafeta, status)
         self.mapEstafetas[nome_estafeta] = estafeta
 
     def loginEstafeta(self, nome):
@@ -126,6 +113,13 @@ class Sistema:
         estafeta = self.mapEstafetas.get(nome)
         
         return estafeta.getEncomendas()
+
+
+    def iniciaEstafetas(self):
+        self.adicionarEstafeta("Jefferson", 1)
+        self.adicionarEstafeta("Walson", 1)
+        self.adicionarEstafeta("Valter", 0)
+        self.adicionarEstafeta("Flipe", 0)
 
     # --- Queries ---
 
