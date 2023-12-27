@@ -28,6 +28,9 @@ class Sistema:
 
         encomenda.estafeta.status = 0
 
+    def executaTrabalho(self, local1, local2, local3):
+        pass
+
     def criaEncomenda(self, local, peso, volume, tempoPedido, distancia):
         # Gera um novo ID para a encomenda
         if not self.mapEncomendas:
