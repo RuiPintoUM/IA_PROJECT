@@ -1,3 +1,4 @@
+from collections import Counter
 from Grafo import Graph
 from Mapa import fill_graph, heuristicaCombustivel, heuristicaTemporais, heuristicaTransito
 from Encomenda import Encomenda
@@ -17,7 +18,13 @@ class Sistema:
         print(f"Encomenda demorou {encomenda.tempoReal} horas a ser entregue.")
         print(f"Encomenda foi entregue de {encomenda.veiculo}.")
         print(f"A distancia percorrida foi de {encomenda.distancia}km.")
-
+        
+        
+    def top5_ranking_entregas(self):
+        sorted_estafetas = sorted(self.mapEstafetas.values(), key=lambda estafeta: len(estafeta.encomenda_ids), reverse=True)
+        top5_estafetas = sorted_estafetas[:5]
+        return top5_estafetas   
+    
     def removeEncomenda(self, encomenda):
         if encomenda.id in self.mapEncomendas:
             del self.mapEncomendas[encomenda.id]

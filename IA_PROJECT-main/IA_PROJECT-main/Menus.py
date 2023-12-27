@@ -12,7 +12,10 @@ def menuRankings(sistema, nome):
     user_input = int(input("Introduza a sua opcao-> "))
     match user_input:
         case 1:
-            print()
+            list_top5 = sistema.top5_ranking_entregas()
+            for i, estafeta in enumerate(list_top5, 1):
+                print(f"{i}. {estafeta.nome} - Entregas: {len(estafeta.encomenda_ids)}")
+                
         case 2:
             print()
         case 3:
