@@ -1,4 +1,3 @@
-from collections import Counter
 from Grafo import Graph
 from Mapa import fill_graph, heuristicaCombustivel, heuristicaTemporais, heuristicaTransito
 from Encomenda import Encomenda
@@ -18,13 +17,7 @@ class Sistema:
         print(f"Encomenda demorou {encomenda.tempoReal} horas a ser entregue.")
         print(f"Encomenda foi entregue de {encomenda.veiculo}.")
         print(f"A distancia percorrida foi de {encomenda.distancia}km.")
-        
-        
-    def top5_ranking_entregas(self):
-        sorted_estafetas = sorted(self.mapEstafetas.values(), key=lambda estafeta: len(estafeta.encomenda_ids), reverse=True)
-        top5_estafetas = sorted_estafetas[:5]
-        return top5_estafetas   
-    
+
     def removeEncomenda(self, encomenda):
         if encomenda.id in self.mapEncomendas:
             del self.mapEncomendas[encomenda.id]
@@ -34,6 +27,9 @@ class Sistema:
                 estafeta.encomenda_ids.remove(encomenda.id)
 
         encomenda.estafeta.status = 0
+
+    def executaTrabalho(self, local1, local2, local3):
+        pass
 
     def criaEncomenda(self, local, peso, volume, tempoPedido, distancia):
         # Gera um novo ID para a encomenda
@@ -70,6 +66,7 @@ class Sistema:
 
     def atribuiAvaliacao(self, estafeta, avaliacao):
         estafeta.somaClassificacoes += int(avaliacao)
+        estafeta.numClassificacoes += 1
 
     def mediaEstafeta(self, estafeta):
         return  estafeta.somaClassificacoes / len(estafeta.encomenda_ids)
@@ -130,20 +127,36 @@ class Sistema:
 
     # --- Queries ---
 
-    def top_ranking_entregas(self):
-        sorted_estafetas = sorted(self.estafetas.items(), key=estafeta.encomenda_ids.len , reverse=True)
-        print(f"Top 5 estafetas com mais entregas efetuadas:")
-        for i, (estafeta, dados) in enumerate(sorted_estafetas[:5], 1):
-            print(f"{i}. {estafeta} - Entregas: {dados['entregas']}")
+    def top_ranking_entregas(self): 
+        sorted_estafetas = sorted(self.mapEstafetas.values(), key=lambda estafeta: len(estafeta.encomenda_ids), reverse=True)
+        top5_estafetas = sorted_estafetas[:5]
+        print(f"Top 5 estafetas com mais entregas:")
+        for i, estafeta in enumerate(top5_estafetas, 1):
+            print(f"{i}. {estafeta.nome} - Entregas: {len(estafeta.encomenda_ids)}")
 
-    def top_ranking_ecologicas(self, n=5):
-        sorted_estafetas = sorted(self.estafetas.items(), key=lambda x: x[1]['entregas_ecologicas'], reverse=True)
-        print(f"Top {n} estafetas com mais entregas ecológicas:")
-        for i, (estafeta, dados) in enumerate(sorted_estafetas[:n], start=1):
-            print(f"{i}. {estafeta} - Entregas Ecológicas: {dados['entregas_ecologicas']}")
+    #2 funções para o top5 de estafetas com mais entregas ecologicas
+    def top_ranking_ecologicas(self):
+        sorted_estafetas = sorted(self.mapEstafetas, key=lambda estafeta: self.conta_entregas_ecologicas(estafeta), reverse=True)
+        top5_estafetas = sorted_estafetas[:5]
+        print(f"Top 5 estafetas com mais entregas ecológicas(de bicicleta):")
+        for i, estafeta in enumerate(top5_estafetas, 1):
+            entregas_ecologicas = self.conta_entregas_ecologicas(estafeta)
+            print(f"{i}. {estafeta.nome} - Entregas ecológicas: {entregas_ecologicas}")
+            
+    
+    def conta_entregas_ecologicas(self, estafeta):
+        entregas_ecologicas = 0
+        for encomenda_id in estafeta.encomenda_ids:
+            encomenda = self.mapEncomendas.get(encomenda_id)
+            if encomenda and encomenda.veiculo == "Bicicleta":
+                entregas_ecologicas += 1
+        return entregas_ecologicas
 
-    def top_ranking_rating(self, n=5):
-        sorted_estafetas = sorted(self.estafetas.items(), key=lambda x: x[1]['rating'], reverse=True)
-        print(f"Top {n} estafetas com melhor rating:")
-        for i, (estafeta, dados) in enumerate(sorted_estafetas[:n], start=1):
-            print(f"{i}. {estafeta} - Rating: {dados['rating']}")
+    def top_ranking_rating(self):
+        sorted_estafetas = sorted(self.mapEstafetas, key=lambda estafeta: estafeta.somaClassificacoes/estafeta.numClassificacoes, reverse=True)
+        top5_estafetas = sorted_estafetas[:5]
+        print(f"Top 5 estafetas com melhor média de classificações:")
+        for i, estafeta in enumerate(top5_estafetas, 1):
+            media_classificacoes = estafeta.somaClassificacoes/estafeta.numClassificacoes
+            print(f"{i}. {estafeta.nome} - Média de Classificações: {media_classificacoes:.2f} ({estafeta.numClassificacoes} classificações)")
+            
