@@ -1,5 +1,7 @@
 # Classe grafo para representaçao de grafos,
+import json
 import math
+import os
 from queue import Queue
 
 import networkx as nx  # biblioteca de tratamento de grafos necessária para desnhar graficamente o grafo
@@ -23,6 +25,22 @@ class Graph:
         self.m_directed = directed
         self.m_graph = {}  # dicionario para armazenar os nodos e arestas
         self.m_h = {}  # dicionario para armazenar as heuristicas para cada nodo -< pesquisa informada
+
+
+    def load_json(self, filename):
+        map_path = os.path.join('data', filename)
+
+        with open(map_path, 'r') as file:
+            loaded_data = json.load(file)
+
+        for edge in loaded_data["edges"]:
+            source = edge["source"]
+            target = edge["target"]
+            weight = edge["weight"]
+            self.add_edge(source, target, weight)
+
+        for node, heuristic_value in loaded_data["heuristics"].items():
+            self.add_heuristica(node, heuristic_value)
 
     #############
     #    escrever o grafo como string

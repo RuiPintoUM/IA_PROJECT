@@ -1,5 +1,5 @@
 from Grafo import Graph
-from Mapa import fill_graph, heuristicaDistanciaLinhaReta #heuristicaCombustivel, heuristicaTemporais, heuristicaTransito
+#from Mapa import fill_graph, heuristicaCombustivel, heuristicaTemporais, heuristicaTransito
 from Encomenda import Encomenda
 from Estafeta import Estafeta
 import time
@@ -9,6 +9,7 @@ class Sistema:
     def __init__(self):     #  construtor do sistema"
         self.mapEstafetas = {}  # Dicionário para armazenar estafetas
         self.mapEncomendas = {}  # Dicionário para armazenar encomendas
+        self.grafo = Graph()
 
     def respostaPosEncomenda(self,encomenda, caminho):
         print("Caminho: ")
@@ -43,12 +44,20 @@ class Sistema:
             id = max(self.mapEncomendas.keys()) + 1
 
         enc = Encomenda(id, local, peso, volume, tempoPedido, distancia)
-
-        if enc.tempoReal != "na":
-            enc.estafeta = self.atribuiEncomenda(id)
-
         self.mapEncomendas[enc.id] = enc
+
         return enc
+
+    def mostrarEncomendasDisponiveis(self, nome):
+        estafeta = self.mapEstafetas.get(nome)
+
+        listaEncomendas = []
+
+        for encomenda in self.mapEncomendas():
+            if estafeta.verificaAddEncomenda():
+                listaEncomendas.add(encomenda)
+
+        return listaEncomendas
 
     def atribuiEncomenda(self, idEncomenda):
 
@@ -57,7 +66,7 @@ class Sistema:
         time.sleep(1) #feature riso só para mostrar que tamos à procura dele
 
         for nome_estafeta, estafeta in self.mapEstafetas.items():
-            if estafeta.status == 0:
+            if estafeta.status == 0:  # sistema saber que estafeta ainda é capaz de ter mais encomendas
                 print("Encontramos o teu Estafeta")
                 print(estafeta.nome)
                 estafeta.status = 1
@@ -77,8 +86,8 @@ class Sistema:
         return estafeta.somaClassificacoes / len(estafeta.encomenda_ids)
 
     def calculaMelhorCaminho(self, g, local):
-        result_BFS = g.procura_BFS("Central", local)
-        result_DFS = g.procura_DFS("Central", local)
+        result_BFS = g.procura_BFS("lisboa", local)
+        result_DFS = g.procura_DFS("lisboa", local)
 
         if result_BFS is None and result_DFS is None:
             return None

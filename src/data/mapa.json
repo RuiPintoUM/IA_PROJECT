@@ -1,0 +1,41 @@
+{
+  "edges": [
+    {"source": "Central", "target": "Avenida Doutor Leonardo Coimbra", "weight": 3},
+    {"source": "Central", "target": "Avenida da Liberdade", "weight": 5},
+    {"source": "Central", "target": "Rua Rei Ricardo II", "weight": 4},
+    {"source": "Central", "target": "Rua de Barros", "weight": 7},
+    {"source": "Central", "target": "Rua da Serrinha", "weight": 12},
+    {"source": "Central", "target": "Rua da Amizade", "weight": 10},
+    {"source": "Rua de Barros", "target": "Rua da Amizade", "weight": 9},
+    {"source": "Rua de Barros", "target": "Rua da Torre", "weight": 19},
+    {"source": "Avenida da Liberdade", "target": "Rua do Montejoia", "weight": 14},
+    {"source": "Avenida da Liberdade", "target": "Rua do Cabo", "weight": 19},
+    {"source": "Avenida da Liberdade", "target": "Avenida Doutor Leonardo Coimbra", "weight": 5},
+    {"source": "Avenida Doutor Leonardo Coimbra", "target": "Rua da Espadilha", "weight": 7},
+    {"source": "Rua Rei Ricardo II", "target": "Rua do Monte", "weight": 11},
+    {"source": "Rua Rei Ricardo II", "target": "Rua da Espadilha", "weight": 24},
+    {"source": "Rua da Serrinha", "target": "Rua da Fonte", "weight": 29},
+    {"source": "Rua da Serrinha", "target": "Rua do Monte", "weight": 7},
+    {"source": "Rua da Espadilha", "target": "Rua da Seara", "weight": 14},
+    {"source": "Rua da Espadilha", "target": "Rua do Monte", "weight": 20},
+    {"source": "Rua do Monte", "target": "Rua dos Canhoes", "weight": 8},
+    {"source": "Rua do Cabo", "target": "Rua dos Canhões", "weight": 10}
+  ],
+  "heuristics": {
+    "Central": 0,
+    "Avenida da Liberdade": 3,
+    "Avenida Doutor Leonardo Coimbra": 2,
+    "Rua de Barros": 5,
+    "Rua Rei Ricardo II": 3,
+    "Rua da Serrinha": 10,
+    "Rua do Cabo": 17,
+    "Rua da Amizade": 8,
+    "Rua do Montejoia": 12,
+    "Rua da Torre": 24,
+    "Rua da Fonte": 32,
+    "Rua da Seara": 13,
+    "Rua dos Canhões": 13,
+    "Rua do Monte": 16,
+    "Rua da Espadilha": 23
+  }
+}
