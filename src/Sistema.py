@@ -1,5 +1,5 @@
 from Grafo import Graph
-from Mapa import fill_graph, heuristicaCombustivel, heuristicaTemporais, heuristicaTransito
+from Mapa import fill_graph, heuristicaDistanciaLinhaReta #heuristicaCombustivel, heuristicaTemporais, heuristicaTransito
 from Encomenda import Encomenda
 from Estafeta import Estafeta
 import time
@@ -77,8 +77,8 @@ class Sistema:
         return estafeta.somaClassificacoes / len(estafeta.encomenda_ids)
 
     def calculaMelhorCaminho(self, g, local):
-        result_BFS = g.procura_BFS("lisboa", local)
-        result_DFS = g.procura_DFS("lisboa", local)
+        result_BFS = g.procura_BFS("Central", local)
+        result_DFS = g.procura_DFS("Central", local)
 
         if result_BFS is None and result_DFS is None:
             return None

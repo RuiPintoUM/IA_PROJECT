@@ -1,5 +1,5 @@
 from Grafo import Graph
-from Mapa import fill_graph, heuristicaCombustivel, heuristicaTemporais, heuristicaTransito
+from Mapa import fill_graph, heuristicaDistanciaLinhaReta #heuristicaCombustivel, heuristicaTemporais, heuristicaTransito
 from Menus import Menus
 from Sistema import Sistema
 
