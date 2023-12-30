@@ -1,7 +1,6 @@
 class Encomenda:
 
-    def __init__(self, id, localChegada, peso, volume, tempoPedido, distancia):
-        self.id = id
+    def __init__(self, localChegada, peso, volume, tempoPedido, distancia):
         self.localChegada = localChegada
         self.peso = float(peso)
         self.volume = float(volume)

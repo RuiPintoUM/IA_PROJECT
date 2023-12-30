@@ -8,8 +8,15 @@ class Sistema:
 
     def __init__(self):     #  construtor do sistema"
         self.mapEstafetas = {}  # Dicionário para armazenar estafetas
-        self.mapEncomendas = {}  # Dicionário para armazenar encomendas
+        self.listaEncomendas = []  # Dicionário para armazenar encomendas
         self.grafo = Graph()
+
+    def localidadeExiste(self, nome):
+        return self.grafo.locationExists(nome)
+    
+    def novaEncomenda(self, local, peso, volume, tempoPedido, distancia):
+        enc = Encomenda(local, peso, volume, tempoPedido, distancia)
+        self.listaEncomendas.append(enc)
 
     def respostaPosEncomenda(self,encomenda, caminho):
         print("Caminho: ")
@@ -35,18 +42,6 @@ class Sistema:
 
     def executaTrabalho(self, local1, local2, local3):
         pass
-
-    def criaEncomenda(self, local, peso, volume, tempoPedido, distancia):
-        # Gera um novo ID para a encomenda
-        if not self.mapEncomendas:
-            id = 1
-        else:
-            id = max(self.mapEncomendas.keys()) + 1
-
-        enc = Encomenda(id, local, peso, volume, tempoPedido, distancia)
-        self.mapEncomendas[enc.id] = enc
-
-        return enc
 
     def mostrarEncomendasDisponiveis(self, nome):
         estafeta = self.mapEstafetas.get(nome)
@@ -85,9 +80,9 @@ class Sistema:
         print(len(estafeta.encomenda_ids))
         return estafeta.somaClassificacoes / len(estafeta.encomenda_ids)
 
-    def calculaMelhorCaminho(self, g, local):
-        result_BFS = g.procura_BFS("lisboa", local)
-        result_DFS = g.procura_DFS("lisboa", local)
+    def calculaMelhorCaminho(self, local):
+        result_BFS = self.grafo.procura_BFS("Central", local)
+        result_DFS = self.grafo.procura_DFS("Central", local)
 
         if result_BFS is None and result_DFS is None:
             return None
@@ -113,8 +108,8 @@ class Sistema:
 
             return (melhorCaminho, custoMin)
 
-    def adicionarEstafeta(self, nome_estafeta, status):
-        estafeta = Estafeta(nome_estafeta, status)
+    def adicionarEstafeta(self, nome_estafeta, status, veiculo):
+        estafeta = Estafeta(nome_estafeta, status, veiculo)
         self.mapEstafetas[nome_estafeta] = estafeta
 
     def loginEstafeta(self, nome):

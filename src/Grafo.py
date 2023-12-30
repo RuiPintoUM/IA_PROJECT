@@ -42,6 +42,12 @@ class Graph:
         for node, heuristic_value in loaded_data["heuristics"].items():
             self.add_heuristica(node, heuristic_value)
 
+    def locationExists(self, name):
+        for node in self.m_nodes:
+            if node.getName() == name:
+                return True
+        return False
+
     #############
     #    escrever o grafo como string
     #############
