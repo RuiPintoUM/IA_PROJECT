@@ -178,7 +178,7 @@ class Graph:
         return (path, custo)
 
     ###########################
-    # desenha grafo  modo grafico
+    # desenha grafo modo grafico
     #########################
 
     def desenha(self):

@@ -9,7 +9,48 @@ class Sistema:
     def __init__(self):     #  construtor do sistema"
         self.mapEstafetas = {}  # Dicionário para armazenar estafetas
         self.mapEncomendas = {}  # Dicionário para armazenar encomendas
+    '''
+        self.carregarDeJSON("sistema_data.json")
 
+    def salvarParaJSON(self, nome_arquivo):
+        pasta_dados = "data"
+        caminho_completo = os.path.join(pasta_dados, nome_arquivo)
+
+        # Se o arquivo já existir, carregue os dados existentes
+        if os.path.exists(caminho_completo):
+            with open(caminho_completo, 'r') as arquivo:
+                data = json.load(arquivo)
+        else:
+            data = {
+                "mapEstafetas": {},
+                "mapEncomendas": {},
+            }
+
+        # Atualize os dados com os novos mapEstafetas e mapEncomendas
+        data["mapEstafetas"].update({k: v.__dict__ for k, v in self.mapEstafetas.items()})
+        data["mapEncomendas"].update({k: v.__dict__ for k, v in self.mapEncomendas.items()})
+
+        with open(caminho_completo, 'w') as arquivo:
+            json.dump(data, arquivo)
+
+    def carregarDeJSON(self, nome_arquivo):
+        pasta_dados = "data"
+        caminho_completo = os.path.join(pasta_dados, nome_arquivo)
+
+        if os.path.exists(caminho_completo):
+            with open(caminho_completo, 'r') as arquivo:
+                data = json.load(arquivo)
+
+            for nome_estafeta, estafeta_data in data["mapEstafetas"].items():
+                estafeta = Estafeta("", "")  # Substitua pelos parâmetros corretos do construtor
+                estafeta.__dict__ = estafeta_data
+                self.mapEstafetas[nome_estafeta] = estafeta
+
+            for id_encomenda, encomenda_data in data["mapEncomendas"].items():
+                encomenda = Encomenda(0, "", 0, 0, 0, 0.0)  # Substitua pelos parâmetros corretos do construtor
+                encomenda.__dict__ = encomenda_data
+                self.mapEncomendas[id_encomenda] = encomenda
+    '''
     def respostaPosEncomenda(self,encomenda, caminho):
         print("Caminho: ")
         for node in caminho:
@@ -66,6 +107,7 @@ class Sistema:
 
     def atribuiAvaliacao(self, estafeta, avaliacao):
         estafeta.somaClassificacoes += int(avaliacao)
+        estafeta.numClassificacoes += 1
 
     def mediaEstafeta(self, estafeta):
         return  estafeta.somaClassificacoes / len(estafeta.encomenda_ids)
@@ -126,20 +168,39 @@ class Sistema:
 
     # --- Queries ---
 
+    # 1 - ranking top 5 estafetas com mais entregas
     def top_ranking_entregas(self):
-        sorted_estafetas = sorted(self.estafetas.items(), key=estafeta.encomenda_ids.len , reverse=True)
-        print(f"Top 5 estafetas com mais entregas efetuadas:")
-        for i, (estafeta, dados) in enumerate(sorted_estafetas[:5], 1):
-            print(f"{i}. {estafeta} - Entregas: {dados['entregas']}")
+        sorted_estafetas = sorted(self.mapEstafetas, key=lambda estafeta: self.conta_entregas_ecologicas(estafeta), reverse=True)
+        top5_estafetas = sorted_estafetas[:5]
+        print(f"Top 5 estafetas com mais entregas ecológicas(de bicicleta):")
+        for i, estafeta in enumerate(top5_estafetas, 1):
+            entregas_ecologicas = self.conta_entregas_ecologicas(estafeta)
+            print(f"{i}. {estafeta.nome} - Entregas ecológicas: {entregas_ecologicas}")
 
-    def top_ranking_ecologicas(self, n=5):
-        sorted_estafetas = sorted(self.estafetas.items(), key=lambda x: x[1]['entregas_ecologicas'], reverse=True)
-        print(f"Top {n} estafetas com mais entregas ecológicas:")
-        for i, (estafeta, dados) in enumerate(sorted_estafetas[:n], start=1):
-            print(f"{i}. {estafeta} - Entregas Ecológicas: {dados['entregas_ecologicas']}")
 
+    # 2 - ranking top 5 estafetas com mais entregas ecologicas (bicicleta)
+    def top_ranking_ecologicas(self):
+        esorted_estafetas = sorted(self.mapEstafetas, key=lambda estafeta: self.conta_entregas_ecologicas(estafeta), reverse=True)
+        top5_estafetas = sorted_estafetas[:5]
+        print(f"Top 5 estafetas com mais entregas ecológicas(de bicicleta):")
+        for i, estafeta in enumerate(top5_estafetas, 1):
+            entregas_ecologicas = self.conta_entregas_ecologicas(estafeta)
+            print(f"{i}. {estafeta.nome} - Entregas ecológicas: {entregas_ecologicas}")
+            
+    def conta_entregas_ecologicas(self, estafeta):
+        entregas_ecologicas = 0
+        for encomenda_id in estafeta.encomenda_ids:
+            encomenda = self.mapEncomendas.get(encomenda_id)
+            if encomenda and encomenda.veiculo == "Bicicleta":
+                entregas_ecologicas += 1
+        return entregas_ecologicas
+
+    # 3 - ranking top 5 estafetas com mais 
     def top_ranking_rating(self, n=5):
-        sorted_estafetas = sorted(self.estafetas.items(), key=lambda x: x[1]['rating'], reverse=True)
-        print(f"Top {n} estafetas com melhor rating:")
-        for i, (estafeta, dados) in enumerate(sorted_estafetas[:n], start=1):
-            print(f"{i}. {estafeta} - Rating: {dados['rating']}")
+        sorted_estafetas = sorted(self.mapEstafetas, key=lambda estafeta: estafeta.somaClassificacoes/estafeta.numClassificacoes, reverse=True)
+        top5_estafetas = sorted_estafetas[:5]
+        print(f"Top 5 estafetas com melhor média de classificações:")
+        for i, estafeta in enumerate(top5_estafetas, 1):
+            media_classificacoes = estafeta.somaClassificacoes/estafeta.numClassificacoes
+            print(f"{i}. {estafeta.nome} - Média de Classificações: {media_classificacoes:.2f} ({estafeta.numClassificacoes} classificações)")
+            

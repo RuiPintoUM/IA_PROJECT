@@ -11,11 +11,14 @@ def menuRankings(sistema, nome):
     user_input = int(input("Introduza a sua opcao-> "))
     match user_input:
         case 1:
-            print()
+            sistema.top_ranking_entregas()
+            menuEstafeta(sistema, nome)
         case 2:
-            print()
+            sistema.top_ranking_ecologicas()
+            menuEstafeta(sistema, nome)
         case 3:
-            print()
+            sistema.top_ranking_rating()
+            menuEstafeta(sistema, nome)
         case 4:
             print(menuEstafeta(sistema, nome))
 
