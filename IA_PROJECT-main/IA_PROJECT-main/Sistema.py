@@ -1,5 +1,5 @@
 from Grafo import Graph
-from Mapa import fill_graph, heuristicaCombustivel, heuristicaTemporais, heuristicaTransito
+#from Mapa import fill_graph, heuristicaCombustivel, heuristicaTemporais, heuristicaTransito
 from Encomenda import Encomenda
 from Estafeta import Estafeta
 import time
@@ -9,6 +9,7 @@ class Sistema:
     def __init__(self):     #  construtor do sistema"
         self.mapEstafetas = {}  # Dicionário para armazenar estafetas
         self.mapEncomendas = {}  # Dicionário para armazenar encomendas
+        self.grafo = Graph()
 
     def respostaPosEncomenda(self,encomenda, caminho):
         print("Caminho: ")
@@ -28,6 +29,10 @@ class Sistema:
 
         encomenda.estafeta.status = 0
 
+    def printanomes(self):
+        for estafeta_id, estafeta in self.mapEstafetas.items():
+            print(estafeta.nome)
+
     def executaTrabalho(self, local1, local2, local3):
         pass
 
@@ -38,15 +43,21 @@ class Sistema:
         else:
             id = max(self.mapEncomendas.keys()) + 1
 
-        #estafeta = self.atribuiEncomenda(id)
-
         enc = Encomenda(id, local, peso, volume, tempoPedido, distancia)
-
-        if enc.tempoReal != "na":
-            enc.estafeta = self.atribuiEncomenda(id)
-
         self.mapEncomendas[enc.id] = enc
+
         return enc
+
+    def mostrarEncomendasDisponiveis(self, nome):
+        estafeta = self.mapEstafetas.get(nome)
+
+        listaEncomendas = []
+
+        for encomenda in self.mapEncomendas():
+            if estafeta.verificaAddEncomenda():
+                listaEncomendas.add(encomenda)
+
+        return listaEncomendas
 
     def atribuiEncomenda(self, idEncomenda):
 
@@ -55,7 +66,7 @@ class Sistema:
         time.sleep(1) #feature riso só para mostrar que tamos à procura dele
 
         for nome_estafeta, estafeta in self.mapEstafetas.items():
-            if estafeta.status == 0:
+            if estafeta.status == 0:  # sistema saber que estafeta ainda é capaz de ter mais encomendas
                 print("Encontramos o teu Estafeta")
                 print(estafeta.nome)
                 estafeta.status = 1
@@ -66,18 +77,20 @@ class Sistema:
 
     def atribuiAvaliacao(self, estafeta, avaliacao):
         estafeta.somaClassificacoes += int(avaliacao)
-        estafeta.numClassificacoes += 1
+        estafeta.status = 0
 
     def mediaEstafeta(self, estafeta):
-        return  estafeta.somaClassificacoes / len(estafeta.encomenda_ids)
+        print(estafeta.somaClassificacoes)
+        print("/")
+        print(len(estafeta.encomenda_ids))
+        return estafeta.somaClassificacoes / len(estafeta.encomenda_ids)
 
     def calculaMelhorCaminho(self, g, local):
-
         result_BFS = g.procura_BFS("lisboa", local)
         result_DFS = g.procura_DFS("lisboa", local)
 
-
-        if result_BFS and result_DFS is None: return None
+        if result_BFS is None and result_DFS is None:
+            return None
         elif result_BFS is not None and result_DFS is None:
             (path1, custo1) = result_BFS
             return (path1, custo1)
@@ -87,19 +100,16 @@ class Sistema:
         else:
             (path1, custo1) = result_BFS
             (path2, custo2) = result_DFS
-            #(path3, custo3) = g.procura_DFS("lisboa", local) #g.greedy("lisboa", local)
-            #(path4, custo4) = g.procura_DFS("lisboa", local) #g.procura_aStar("lisboa", local)
 
-            custoMin = (min(custo1, custo2))
+            custoMin = min(custo1, custo2)
 
             if custo1 == custoMin:
                 melhorCaminho = path1
             elif custo2 == custoMin:
                 melhorCaminho = path2
-            #elif custo3 == custoMin:
-            #    melhorCaminho = path3
-            #else:
-            #    melhorCaminho = path4
+
+            print("Melhor Caminho:", melhorCaminho)
+            print("Custo Mínimo:", custoMin)
 
             return (melhorCaminho, custoMin)
 
@@ -118,7 +128,6 @@ class Sistema:
         
         return estafeta.getEncomendas()
 
-
     def iniciaEstafetas(self):
         self.adicionarEstafeta("Jefferson", 1)
         self.adicionarEstafeta("Walson", 1)
@@ -127,36 +136,20 @@ class Sistema:
 
     # --- Queries ---
 
-    def top_ranking_entregas(self): 
-        sorted_estafetas = sorted(self.mapEstafetas.values(), key=lambda estafeta: len(estafeta.encomenda_ids), reverse=True)
-        top5_estafetas = sorted_estafetas[:5]
-        print(f"Top 5 estafetas com mais entregas:")
-        for i, estafeta in enumerate(top5_estafetas, 1):
-            print(f"{i}. {estafeta.nome} - Entregas: {len(estafeta.encomenda_ids)}")
+    def top_ranking_entregas(self):
+        sorted_estafetas = sorted(self.estafetas.items(), key=estafeta.encomenda_ids.len , reverse=True)
+        print(f"Top 5 estafetas com mais entregas efetuadas:")
+        for i, (estafeta, dados) in enumerate(sorted_estafetas[:5], 1):
+            print(f"{i}. {estafeta} - Entregas: {dados['entregas']}")
 
-    #2 funções para o top5 de estafetas com mais entregas ecologicas
-    def top_ranking_ecologicas(self):
-        sorted_estafetas = sorted(self.mapEstafetas, key=lambda estafeta: self.conta_entregas_ecologicas(estafeta), reverse=True)
-        top5_estafetas = sorted_estafetas[:5]
-        print(f"Top 5 estafetas com mais entregas ecológicas(de bicicleta):")
-        for i, estafeta in enumerate(top5_estafetas, 1):
-            entregas_ecologicas = self.conta_entregas_ecologicas(estafeta)
-            print(f"{i}. {estafeta.nome} - Entregas ecológicas: {entregas_ecologicas}")
-            
-    
-    def conta_entregas_ecologicas(self, estafeta):
-        entregas_ecologicas = 0
-        for encomenda_id in estafeta.encomenda_ids:
-            encomenda = self.mapEncomendas.get(encomenda_id)
-            if encomenda and encomenda.veiculo == "Bicicleta":
-                entregas_ecologicas += 1
-        return entregas_ecologicas
+    def top_ranking_ecologicas(self, n=5):
+        sorted_estafetas = sorted(self.estafetas.items(), key=lambda x: x[1]['entregas_ecologicas'], reverse=True)
+        print(f"Top {n} estafetas com mais entregas ecológicas:")
+        for i, (estafeta, dados) in enumerate(sorted_estafetas[:n], start=1):
+            print(f"{i}. {estafeta} - Entregas Ecológicas: {dados['entregas_ecologicas']}")
 
-    def top_ranking_rating(self):
-        sorted_estafetas = sorted(self.mapEstafetas, key=lambda estafeta: estafeta.somaClassificacoes/estafeta.numClassificacoes, reverse=True)
-        top5_estafetas = sorted_estafetas[:5]
-        print(f"Top 5 estafetas com melhor média de classificações:")
-        for i, estafeta in enumerate(top5_estafetas, 1):
-            media_classificacoes = estafeta.somaClassificacoes/estafeta.numClassificacoes
-            print(f"{i}. {estafeta.nome} - Média de Classificações: {media_classificacoes:.2f} ({estafeta.numClassificacoes} classificações)")
-            
+    def top_ranking_rating(self, n=5):
+        sorted_estafetas = sorted(self.estafetas.items(), key=lambda x: x[1]['rating'], reverse=True)
+        print(f"Top {n} estafetas com melhor rating:")
+        for i, (estafeta, dados) in enumerate(sorted_estafetas[:n], start=1):
+            print(f"{i}. {estafeta} - Rating: {dados['rating']}")

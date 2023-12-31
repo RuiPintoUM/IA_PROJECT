@@ -1,5 +1,7 @@
 # Classe grafo para representaçao de grafos,
+import json
 import math
+import os
 from queue import Queue
 
 import networkx as nx  # biblioteca de tratamento de grafos necessária para desnhar graficamente o grafo
@@ -23,6 +25,22 @@ class Graph:
         self.m_directed = directed
         self.m_graph = {}  # dicionario para armazenar os nodos e arestas
         self.m_h = {}  # dicionario para armazenar as heuristicas para cada nodo -< pesquisa informada
+
+
+    def load_json(self, filename):
+        map_path = os.path.join('data', filename)
+
+        with open(map_path, 'r') as file:
+            loaded_data = json.load(file)
+
+        for edge in loaded_data["edges"]:
+            source = edge["source"]
+            target = edge["target"]
+            weight = edge["weight"]
+            self.add_edge(source, target, weight)
+
+        for node, heuristic_value in loaded_data["heuristics"].items():
+            self.add_heuristica(node, heuristic_value)
 
     #############
     #    escrever o grafo como string
@@ -119,7 +137,12 @@ class Graph:
     #     procura DFS
     ####################################################################################
 
-    def procura_DFS(self, start, end, path=[], visited=set()):
+    def procura_DFS(self, start, end, path=None, visited=None):
+        if path is None:
+            path = []
+        if visited is None:
+            visited = set()
+
         path.append(start)
         visited.add(start)
 
@@ -127,11 +150,13 @@ class Graph:
             # calcular o custo do caminho funçao calcula custo.
             custoT = self.calcula_custo(path)
             return (path, custoT)
+
         for (adjacente, peso) in self.m_graph[start]:
             if adjacente not in visited:
-                resultado = self.procura_DFS(adjacente, end, path, visited)
+                resultado = self.procura_DFS(adjacente, end, path, visited.copy())
                 if resultado is not None:
                     return resultado
+
         path.pop()  # se nao encontra remover o que está no caminho......
         return None
 
@@ -140,31 +165,32 @@ class Graph:
     ######################################################
 
     def procura_BFS(self, start, end):
-        # definir nodos visitados para evitar ciclos
         visited = set()
         fila = Queue()
         custo = 0
-        # adicionar o nodo inicial à fila e aos visitados
+
         fila.put(start)
         visited.add(start)
 
-        # garantir que o start node nao tem pais...
         parent = dict()
         parent[start] = None
 
         path_found = False
         while not fila.empty() and path_found == False:
             nodo_atual = fila.get()
-            if nodo_atual == end:
-                path_found = True
-            else:
-                for (adjacente, peso) in self.m_graph[nodo_atual]:
-                    if adjacente not in visited:
-                        fila.put(adjacente)
-                        parent[adjacente] = nodo_atual
-                        visited.add(adjacente)
 
-        # reconstruir o caminho
+            # Ordena os vizinhos alfabeticamente
+            neighbors = sorted(self.m_graph[nodo_atual], key=lambda x: x[0])
+
+            for (adjacente, peso) in neighbors:
+                if adjacente not in visited:
+                    fila.put(adjacente)
+                    parent[adjacente] = nodo_atual
+                    visited.add(adjacente)
+
+                    if adjacente == end:
+                        path_found = True
+                        break  # Encerra o loop interno se o destino for alcançado
 
         path = []
         if path_found:
@@ -173,8 +199,8 @@ class Graph:
                 path.append(parent[end])
                 end = parent[end]
             path.reverse()
-            # funçao calcula custo caminho
             custo = self.calcula_custo(path)
+
         return (path, custo)
 
     ###########################
