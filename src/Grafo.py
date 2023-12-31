@@ -45,6 +45,18 @@ class Graph:
             if node.getName() == name:
                 return True
         return False
+    
+    def getNeighbours(self, node):
+        if node in self.m_graph:
+            return self.m_graph[node]
+        else:
+            return []
+        
+    def getH(self, node):
+        if node in self.m_h:
+            return self.m_h[node]
+        else:
+            return 0
 
     #############
     #    escrever o grafo como string
@@ -243,8 +255,6 @@ class Graph:
         n1 = Node(n)
         if n1 in self.m_nodes:
             self.m_h[n] = estima
-
-
 
     #def heuristicaCombustivel(self, ):
 

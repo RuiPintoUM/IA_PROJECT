@@ -154,45 +154,35 @@ class Sistema:
         print("/")
         print(len(estafeta.encomenda_ids))
         return estafeta.somaClassificacoes / len(estafeta.encomenda_ids)
-
+    
     def calculaMelhorCaminho(self, local):
         result_BFS = self.grafo.procura_BFS("Central", local)
+        print(result_BFS)
         result_DFS = self.grafo.procura_DFS("Central", local)
+        print(result_DFS)
+        result_Greedy = self.grafo.greedy("Central", local)
+        print(result_Greedy)
+        result_Astar = self.grafo.procura_aStar("Central", local)
+        print(result_Astar)
 
-        if result_BFS is None and result_DFS is None:
+        results = [result_BFS, result_DFS, result_Greedy, result_Astar]
+        valid_results = [result for result in results if result is not None]
+
+        if not valid_results:
             return None
-        elif result_BFS is not None and result_DFS is None:
-            (path1, custo1) = result_BFS
-            return (path1, custo1)
-        elif result_DFS is not None and result_BFS is None:
-            (path2, custo2) = result_DFS
-            return (path2, custo2)
-        else:
-            (path1, custo1) = result_BFS
-            (path2, custo2) = result_DFS
 
-            custoMin = min(custo1, custo2)
+        min_result = min(valid_results, key=lambda x: x[1])
+        melhorCaminho, custoMin = min_result
 
-            if custo1 == custoMin:
-                melhorCaminho = path1
-            elif custo2 == custoMin:
-                melhorCaminho = path2
+        print("Melhor Caminho:", melhorCaminho)
+        print("Custo Mínimo:", custoMin)
 
-            print("Melhor Caminho:", melhorCaminho)
-            print("Custo Mínimo:", custoMin)
-
-            return (melhorCaminho, custoMin)
+        return min_result
         
     def mostrarListaEncomendas(self, nome):
         estafeta = self.mapEstafetas.get(nome)
         
         return estafeta.getEncomendas()
-
-    def iniciaEstafetas(self):
-        self.adicionarEstafeta("Jefferson", 1)
-        self.adicionarEstafeta("Walson", 1)
-        self.adicionarEstafeta("Valter", 0)
-        self.adicionarEstafeta("Flipe", 0)
 
     # --- Queries ---
 
