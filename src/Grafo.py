@@ -1,6 +1,4 @@
-# Classe grafo para representaçao de grafos,
 import json
-import math
 import os
 from queue import Queue
 

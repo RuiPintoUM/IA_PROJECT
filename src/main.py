@@ -7,7 +7,6 @@ def main():
     sistema = Sistema()
     sistema.grafo.load_json('mapa.json')
     #sistema.grafo.desenha()
-    #sistema.iniciaEstafetas()
 
     MenuPrincial(sistema)
 

@@ -1,7 +1,6 @@
 import json
 import os
 from Grafo import Graph
-#from Mapa import fill_graph, heuristicaCombustivel, heuristicaTemporais, heuristicaTransito
 from Encomenda import Encomenda
 from Estafeta import Estafeta
 import time
@@ -24,6 +23,12 @@ class Sistema:
     def adicionarEstafeta(self, nome_estafeta, status, veiculo):
         estafeta = Estafeta(nome_estafeta, status, veiculo)
         self.mapEstafetas[nome_estafeta] = estafeta
+
+    def loginEstafeta(self, nome):
+        if nome in self.mapEstafetas:
+            return True
+        else:
+            return False
 
     def guardarData(self):
         map_path = os.path.join('data', 'estafetas.json')
@@ -177,16 +182,6 @@ class Sistema:
             print("Custo Mínimo:", custoMin)
 
             return (melhorCaminho, custoMin)
-
-    def adicionarEstafeta(self, nome_estafeta, status, veiculo):
-        estafeta = Estafeta(nome_estafeta, status, veiculo)
-        self.mapEstafetas[nome_estafeta] = estafeta
-
-    def loginEstafeta(self, nome):
-        if nome in self.mapEstafetas:
-            return True
-        else:
-            return False
         
     def mostrarListaEncomendas(self, nome):
         estafeta = self.mapEstafetas.get(nome)

@@ -19,7 +19,18 @@
     {"source": "Rua da Espadilha", "target": "Rua da Seara", "weight": 14},
     {"source": "Rua da Espadilha", "target": "Rua do Monte", "weight": 20},
     {"source": "Rua do Monte", "target": "Rua dos Canhoes", "weight": 8},
-    {"source": "Rua do Cabo", "target": "Rua dos Canhões", "weight": 10}
+    {"source": "Rua do Cabo", "target": "Rua dos Canhoes", "weight": 10},
+    {"source": "Central", "target": "Rua de Minhome", "weight": 14},
+    {"source": "Rua de Minhome", "target": "Rua da Torre", "weight": 12},
+    {"source": "Rua do Cabo", "target": "Rua do Pastor", "weight": 10},
+    {"source": "Rua da Torre", "target": "Rua Gomes de Sa", "weight": 6},
+    {"source": "Rua do Pastor", "target": "Rua Gomes de Sa", "weight": 8},
+    {"source": "Rua do Cabo", "target": "Rua da Torre", "weight": 17},
+    {"source": "Rua do Montejoia", "target": "Rua Vitor Pedro", "weight": 16},
+    {"source": "Rua Vitor Pedro", "target": "Rua D. Duarte", "weight": 4},
+    {"source": "Rua D. Duarte", "target": "Rua da Seara", "weight": 6},
+    {"source": "Avenida Doutor Leonardo Coimbra", "target": "Rua Vitor Pedro", "weight": 19},
+    {"source": "Avenida Doutor Leonardo Coimbra", "target": "Rua D. Duarte", "weight": 15}
   ],
   "heuristics": {
     "Central": 0,
@@ -34,8 +45,13 @@
     "Rua da Torre": 24,
     "Rua da Fonte": 32,
     "Rua da Seara": 13,
-    "Rua dos Canhões": 13,
+    "Rua dos Canhoes": 13,
     "Rua do Monte": 16,
-    "Rua da Espadilha": 23
+    "Rua da Espadilha": 23,
+    "Rua Gomes de Sa": 26,
+    "Rua de Minhome": 12,
+    "Rua do Pastor": 23,
+    "Rua Vitor Pedro": 20,
+    "Rua D. Duarte": 15
   }
 }
