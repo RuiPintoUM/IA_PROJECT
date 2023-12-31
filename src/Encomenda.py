@@ -5,7 +5,6 @@ class Encomenda:
         self.peso = float(peso)
         self.volume = float(volume)
         self.tempoPedido = float(tempoPedido)
-        #self.estafeta
         self.distancia = float(distancia)
         self.tempoB = self.tempoBicla()
         self.tempoM = self.tempoMota()

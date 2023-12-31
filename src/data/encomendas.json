@@ -1,0 +1,16 @@
+[
+  {
+    "local": "Rua de Barros",
+    "peso": 10.0,
+    "volume": 30.0,
+    "tempo": 0.0,
+    "dist": 7.0
+  },
+  {
+    "local": "Rua do Cabo",
+    "peso": 15.0,
+    "volume": 50.0,
+    "tempo": 2.0,
+    "dist": 24.0
+  }
+]

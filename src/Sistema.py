@@ -1,3 +1,5 @@
+import json
+import os
 from Grafo import Graph
 #from Mapa import fill_graph, heuristicaCombustivel, heuristicaTemporais, heuristicaTransito
 from Encomenda import Encomenda
@@ -10,6 +12,7 @@ class Sistema:
         self.mapEstafetas = {}  # Dicionário para armazenar estafetas
         self.listaEncomendas = []  # Dicionário para armazenar encomendas
         self.grafo = Graph()
+        self.carregaData()
 
     def localidadeExiste(self, nome):
         return self.grafo.locationExists(nome)
@@ -17,6 +20,73 @@ class Sistema:
     def novaEncomenda(self, local, peso, volume, tempoPedido, distancia):
         enc = Encomenda(local, peso, volume, tempoPedido, distancia)
         self.listaEncomendas.append(enc)
+
+    def adicionarEstafeta(self, nome_estafeta, status, veiculo):
+        estafeta = Estafeta(nome_estafeta, status, veiculo)
+        self.mapEstafetas[nome_estafeta] = estafeta
+
+    def guardarData(self):
+        map_path = os.path.join('data', 'estafetas.json')
+        existing_data = []
+
+        for estafeta in self.mapEstafetas.values():
+            new_estafeta_data = {
+                "nome": estafeta.nome,
+                "status": estafeta.status,
+                "veiculo": estafeta.veiculo,
+                "listaEnc": estafeta.listaEncomenda,
+                "somaClass": estafeta.somaClassificacoes
+            }
+            existing_data.append(new_estafeta_data)
+
+        with open(map_path, 'w') as file:
+            json.dump(existing_data, file, indent=2)
+
+        encomendas_path = os.path.join('data', 'encomendas.json')
+        existing_data = []
+
+        for encomenda in self.listaEncomendas:
+            new_encomenda_data = {
+                "local": encomenda.localChegada,
+                "peso": encomenda.peso,
+                "volume": encomenda.volume,
+                "tempo": encomenda.tempoPedido,
+                "dist": encomenda.distancia
+            }
+            existing_data.append(new_encomenda_data)
+
+        with open(encomendas_path, 'w') as file:
+            json.dump(existing_data, file, indent=2)
+
+    def carregaData(self):
+        estafetas_path = os.path.join('data', 'estafetas.json')
+        encomendas_path = os.path.join('data', 'encomendas.json')
+
+        with open(estafetas_path, 'r') as estafetas_file:
+            estafetas_data = json.load(estafetas_file)
+
+            for estafeta_data in estafetas_data:
+                estafeta = Estafeta(
+                    nome=estafeta_data["nome"],
+                    status=estafeta_data["status"],
+                    veiculo=estafeta_data["veiculo"],
+                    listaEncomenda=estafeta_data["listaEnc"],
+                    somaClassificacoes=estafeta_data["somaClass"]
+                )
+                self.mapEstafetas[estafeta_data["nome"]] = estafeta
+
+        with open(encomendas_path, 'r') as encomendas_file:
+            encomendas_data = json.load(encomendas_file)
+
+            for encomenda_data in encomendas_data:
+                encomenda = Encomenda(
+                    localChegada=encomenda_data["local"],
+                    peso=encomenda_data["peso"],
+                    volume=encomenda_data["volume"],
+                    tempoPedido=encomenda_data["tempo"],
+                    distancia=encomenda_data["dist"]
+                )
+                self.listaEncomendas.append(encomenda)
 
     def respostaPosEncomenda(self,encomenda, caminho):
         print("Caminho: ")

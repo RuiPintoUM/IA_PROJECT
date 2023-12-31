@@ -9,6 +9,7 @@ def MenuPrincial(sistema):
         print("1 - Interface Cliente")
         print("2 - Interface Estafeta")
         print("3 - Interface Admnistrador")
+        print("4 - Guardar estado")
         print("0 - Sair")
 
         opcao = int(input("Introduza a sua opcao - "))
@@ -26,6 +27,9 @@ def MenuPrincial(sistema):
 
             case 3:  # interface admnistrador
                 pass
+
+            case 4:  # save
+                sistema.guardarData()
 
             case _:
                 print("Opção inválida")

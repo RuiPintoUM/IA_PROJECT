@@ -1,8 +1,8 @@
 class Estafeta:
-    def __init__(self, nome, status, veiculo, somaClassificacoes = 0):
+    def __init__(self, nome, status, veiculo, listaEncomenda = [], somaClassificacoes = 0):
         self.nome = nome
         self.status = status
-        self.listaEncomendaPorFazer = []
+        self.listaEncomenda = listaEncomenda
         self.veiculo = veiculo
         self.somaClassificacoes = somaClassificacoes
 
