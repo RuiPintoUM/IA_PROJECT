@@ -113,6 +113,7 @@ def menuEstafetaLogin(sistema):
             case _:
                 print("Opção inválida")
 
+                
 def menuEstafeta(sistema, nome):
     print("\n--- Menu Estafeta ---\n")
     print("1 - Verificar encomendas disponíveis")
@@ -153,24 +154,44 @@ def menuRankings(sistema, nome):
         case 4:
             print(menuEstafeta(sistema, nome))
 
+def escreverEncomendasDisponiveis(encomendasDisponivies):
+    i = 1
+    if not encomendasDisponivies:
+        print("   Nenhuma encomenda disponível")
+
+    for encomenda in encomendasDisponivies:
+        print(str(i) + " -> Encomenda para " + encomenda.localChegada + " com peso: " + str(encomenda.peso))
+        i += 1
+
+
+def adicionarEncomendaEstafeta(sistema, nome, encomendasDisponivies):
+    nrEncomenda = int(input("Introduza o número da encomenda -> "))
+    encomenda = encomendasDisponivies[nrEncomenda - 1]
+
+    sistema.atribuiEncomenda(nome, encomenda)
+
+    print("-> Encomenda adicionada com sucesso")
+
+    
 def menuEncomendasEstafeta(sistema, nome):
-    encomendasDisponivies = Sistema.mostrarEncomendasDisponiveis(nome)
+    encomendasDisponivies = Sistema.mostrarEncomendasDisponiveis(sistema, nome)
 
     print("--- Entregas diponíveis ---")
-    print(encomendasDisponivies)
-    print("--- Escolha o modo de entrega ---")
+    escreverEncomendasDisponiveis(encomendasDisponivies)
 
+    print("\nEspaco disponível: " + str(sistema.espacoLivreEstafeta(nome)))
+    print("--- Escolha o modo de entrega ---")
     print("1 - Adicionar uma encomenda")
-    print("2 - Caminho mais ecológico")
-    print("3 - Sair")
+    print("0 - Sair")
 
     user_input = int(input("Introduza a sua opcao-> "))
     match user_input:
         case 1:
-            print()
+            adicionarEncomendaEstafeta(sistema, nome, encomendasDisponivies)
+            menuEstafeta(sistema, nome)
         case 2:
             print()
-        case 3:
+        case 0:
             print(menuEstafeta(sistema, nome))
 
 def menuTrabalhos(sistema):

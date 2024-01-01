@@ -9,7 +9,7 @@ class Estafeta:
     def somaEncomendas(self):
         accumulator = 0
 
-        for encomenda in self.listaEncomendaPorFazer():
+        for encomenda in self.listaEncomenda:
             accumulator += encomenda.peso
 
         return accumulator
@@ -20,31 +20,22 @@ class Estafeta:
         acumolador += encomenda.peso
 
         match  self.veiculo:
-            case 1:
+            case "bicicleta":
                 if acumolador < 5:
                     return True
                 else:
                     return False
-            case 2:
+            case "mota":
                 if acumolador < 20:
                     return True
                 else:
                     return False
-            case 3:
+            case "carro":
                 if acumolador < 100:
                     return True
                 else:
                     return False
 
-    def addEncomenda(self, encomenda):
-
-        pesoEncomendas = self.somaEncomendas()
-        self.encomenda_ids.append(encomenda)
-
     def getEncomendas(self):
         return self.encomenda_ids
-
-
-
-
 

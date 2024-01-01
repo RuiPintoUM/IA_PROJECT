@@ -6,11 +6,11 @@ from Sistema import Sistema
 def main():
     sistema = Sistema()
     sistema.grafo.load_json('mapa.json')
-    #istema.grafo.desenha()
+    #sistema.grafo.desenha()
 
-    #MenuPrincial(sistema)
+    MenuPrincial(sistema)
 
-    sistema.calculaMelhorCaminho("Rua Gomes de Sa")
+    #sistema.calculaMelhorCaminho("Rua Gomes de Sa")
 
 if __name__ == "__main__":
     main()

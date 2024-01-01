@@ -102,14 +102,22 @@ class Sistema:
         print(f"A distancia percorrida foi de {encomenda.distancia}km.")
 
     def removeEncomenda(self, encomenda):
-        if encomenda.id in self.mapEncomendas:
-            del self.mapEncomendas[encomenda.id]
-
-        for estafeta in self.mapEstafetas.values():
-            if encomenda.id in estafeta.encomenda_ids:
-                estafeta.encomenda_ids.remove(encomenda.id)
 
         encomenda.estafeta.status = 0
+
+    def espacoLivreEstafeta(self, nome):
+        estafeta = self.mapEstafetas.get(nome)
+        espacoOcupado = estafeta.somaEncomendas()
+
+        match  estafeta.veiculo:
+            case "bicicleta":
+                return 5 - espacoOcupado
+
+            case "mota":
+                return 20 - espacoOcupado
+
+            case "carro":
+                return 100 - espacoOcupado
 
     def printanomes(self):
         for estafeta_id, estafeta in self.mapEstafetas.items():
@@ -123,27 +131,17 @@ class Sistema:
 
         listaEncomendas = []
 
-        for encomenda in self.mapEncomendas():
-            if estafeta.verificaAddEncomenda():
-                listaEncomendas.add(encomenda)
+        for encomenda in self.listaEncomendas:
+            if encomenda.estado == 0 and estafeta.verificaAddEncomenda(encomenda) :
+                listaEncomendas.append(encomenda)
 
         return listaEncomendas
 
-    def atribuiEncomenda(self, idEncomenda):
+    def atribuiEncomenda(self, nome, encomenda):
+        estafeta = self.mapEstafetas.get(nome)
 
-        print("À Procura do teu Estafeta.")
-
-        time.sleep(1) #feature riso só para mostrar que tamos à procura dele
-
-        for nome_estafeta, estafeta in self.mapEstafetas.items():
-            if estafeta.status == 0:  # sistema saber que estafeta ainda é capaz de ter mais encomendas
-                print("Encontramos o teu Estafeta")
-                print(estafeta.nome)
-                estafeta.status = 1
-                estafeta.addEncomenda(idEncomenda)
-                return estafeta
-
-        return "na"
+        encomenda.estado = 1
+        estafeta.listaEncomenda.append(encomenda)
 
     def atribuiAvaliacao(self, estafeta, avaliacao):
         estafeta.somaClassificacoes += int(avaliacao)
