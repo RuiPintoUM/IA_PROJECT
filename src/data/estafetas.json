@@ -1,9 +1,37 @@
 [
   {
-    "nome": "rei",
+    "nome": "Luis",
     "status": 0,
     "veiculo": "carro",
-    "listaEnc": [],
+    "numEntregas": 0,
+    "somaClass": 0
+  },
+  {
+    "nome": "Ricardo",
+    "status": 0,
+    "veiculo": "bicicleta",
+    "numEntregas": 0,
+    "somaClass": 0
+  },
+  {
+    "nome": "Hugo",
+    "status": 0,
+    "veiculo": "mota",
+    "numEntregas": 0,
+    "somaClass": 0
+  },
+  {
+    "nome": "Rui",
+    "status": 0,
+    "veiculo": "bicicleta",
+    "numEntregas": 0,
+    "somaClass": 0
+  },
+  {
+    "nome": "Jorge",
+    "status": 0,
+    "veiculo": "carro",
+    "numEntregas": 0,
     "somaClass": 0
   }
 ]

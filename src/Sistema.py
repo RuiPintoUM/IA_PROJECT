@@ -46,7 +46,7 @@ class Sistema:
                 "nome": estafeta.nome,
                 "status": estafeta.status,
                 "veiculo": estafeta.veiculo,
-                "listaEnc": estafeta.listaEncomenda,
+                "numEntregas": estafeta.numEntregas,
                 "somaClass": estafeta.somaClassificacoes
             }
             existing_data.append(new_estafeta_data)
@@ -82,7 +82,7 @@ class Sistema:
                     nome=estafeta_data["nome"],
                     status=estafeta_data["status"],
                     veiculo=estafeta_data["veiculo"],
-                    listaEncomenda=estafeta_data["listaEnc"],
+                    numEntregas=estafeta_data["numEntregas"],
                     somaClassificacoes=estafeta_data["somaClass"]
                 )
                 self.mapEstafetas[estafeta_data["nome"]] = estafeta

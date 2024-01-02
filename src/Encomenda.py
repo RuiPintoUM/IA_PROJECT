@@ -7,9 +7,6 @@ class Encomenda:
         self.tempoPedido = float(tempoPedido)
         self.estado = 0 # 0 -> por atribuir 1 -> atribuida
         self.distancia = float(distancia)
-        self.defineVeiculo()
-        self.definePreco()
-
 
     def defineVeiculo(self):
         if ((self.tempoB < self.tempoPedido) and (self.peso < 5)) or (self.tempoPedido == 0):
