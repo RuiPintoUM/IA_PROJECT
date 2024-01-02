@@ -19,6 +19,7 @@ class Sistema:
     def novaEncomenda(self, local, peso, volume, tempoPedido, distancia):
         enc = Encomenda(local, peso, volume, tempoPedido, distancia)
         self.listaEncomendas.append(enc)
+        return enc
 
     def adicionarEstafeta(self, nome_estafeta, status, veiculo):
         estafeta = Estafeta(nome_estafeta, status, veiculo)
@@ -29,6 +30,12 @@ class Sistema:
             return True
         else:
             return False
+        
+    def estafetaMaisEcologico(self, peso, distancia, tempo):
+        for estafeta in self.mapEstafetas.values():
+            if estafeta.verficaViabilidade(peso, distancia, tempo):
+                pass
+            
 
     def guardarData(self):
         map_path = os.path.join('data', 'estafetas.json')
@@ -120,7 +127,7 @@ class Sistema:
                 return 100 - espacoOcupado
 
     def printanomes(self):
-        for estafeta_id, estafeta in self.mapEstafetas.items():
+        for estafeta in self.mapEstafetas.values():
             print(estafeta.nome)
 
     def executaTrabalho(self, local1, local2, local3):

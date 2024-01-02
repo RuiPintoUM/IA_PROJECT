@@ -50,35 +50,29 @@ def menuCliente(sistema):
         print(f"O local '{local}' não existe.")
 
     distancia = sistema.calculaMelhorCaminho(local)[1]
-    sistema.novaEncomenda(local, peso, volume, tempoPedido, distancia)
+    enc = sistema.novaEncomenda(local, peso, volume, tempoPedido, distancia)
     '''
-    if resultadoCaminho is None:
-        print("O sistema não encontrou caminho para o local desejado.")
-        MenuPrincial(sistema)
+    (caminho, distancia) = resultadoCaminho
+
+    if encomenda.veiculo == "na":
+        print("Encomenda não pode ser entregue no tempo pedido.")
+    elif encomenda.estafeta == "na":
+        print("Não há estafetas disponíveis no momento.")
     else:
-        (caminho, distancia) = resultadoCaminho
-        encomenda = sistema.criaEncomenda(local, peso, volume, tempoPedido, distancia)
+        confirmacao = input(f"O preço da encomenda é {encomenda.preco}. Deseja aceitar? (S ou N): ")
 
-        if encomenda.veiculo == "na":
-            print("Encomenda não pode ser entregue no tempo pedido.")
-        elif encomenda.estafeta == "na":
-            print("Não há estafetas disponíveis no momento.")
+        if confirmacao.lower() == "s":
+            pass
         else:
-            confirmacao = input(f"O preço da encomenda é {encomenda.preco}. Deseja aceitar? (S ou N): ")
+            sistema.removeEncomenda(encomenda)
+            MenuPrincial(sistema)
 
-            if confirmacao == "S".lower():
-                pass
-            else:
-                sistema.removeEncomenda(encomenda)
-                Menus(sistema)
-
-            print("...Encomenda a ser feita no momento...")
-            sistema.respostaPosEncomenda(encomenda, caminho)
-            avaliacao = input("Digite a avaliacao do gajo (0 a 5): ")
-            sistema.atribuiAvaliacao(encomenda.estafeta, avaliacao)
-            print(f"Somaclassificaçoes: {encomenda.estafeta.somaClassificacoes}.")
-            print(f"A avaliação média de {encomenda.estafeta.nome} é {sistema.mediaEstafeta(encomenda.estafeta)}.")
-
+        print("...Encomenda a ser feita no momento...")
+        sistema.respostaPosEncomenda(encomenda, caminho)
+        avaliacao = input("Digite a avaliacao do gajo (0 a 5): ")
+        sistema.atribuiAvaliacao(encomenda.estafeta, avaliacao)
+        print(f"Somaclassificaçoes: {encomenda.estafeta.somaClassificacoes}.")
+        print(f"A avaliação média de {encomenda.estafeta.nome} é {sistema.mediaEstafeta(encomenda.estafeta)}.")
     '''
 
 def menuEstafetaLogin(sistema):

@@ -7,26 +7,8 @@ class Encomenda:
         self.tempoPedido = float(tempoPedido)
         self.estado = 0 # 0 -> por atribuir 1 -> atribuida
         self.distancia = float(distancia)
-        self.tempoB = self.tempoBicla()
-        self.tempoM = self.tempoMota()
-        self.tempoC = self.tempoCarro()
         self.defineVeiculo()
         self.definePreco()
-
-    def tempoBicla(self):
-        velocidade_bicla = 10  # Velocidade em km/h para bicicleta
-        tempo_horas = self.distancia / velocidade_bicla
-        return tempo_horas
-
-    def tempoMota(self):
-        velocidade_mota = 35  # Velocidade em km/h para mota
-        tempo_horas = self.distancia / velocidade_mota
-        return tempo_horas
-
-    def tempoCarro(self):
-        velocidade_carro = 50  # Velocidade em km/h para carro
-        tempo_horas = self.distancia / velocidade_carro
-        return tempo_horas
 
 
     def defineVeiculo(self):

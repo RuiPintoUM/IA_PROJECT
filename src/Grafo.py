@@ -391,7 +391,6 @@ class Graph:
                     open_list.add(m)
                     parents[m] = n
 
-
             # remover n da open_list e adiciona-lo à closed_list
             # porque todos os seus vizinhos foram inspecionados
             open_list.remove(n)
