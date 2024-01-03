@@ -14,20 +14,24 @@ def MenuPrincipal(sistema):
 
         match opcao:
             case 0:
-                print("Saindo.......")
+                print("... A sair ...")
                 break
 
-            case 1:  # interface cliente
+            case 1:
                 menuClienteLogin(sistema)
+                break
 
-            case 2:  # interface estafeta
+            case 2:
                 menuEstafetaLogin(sistema)
+                break
 
-            case 3:  # interface admnistrador
+            case 3:
                 menuAdmin(sistema)
+                break
 
-            case 4:  # save
+            case 4:
                 sistema.guardarData()
+                break
 
             case _:
                 print("Opção inválida")
@@ -48,11 +52,13 @@ def menuClienteLogin(sistema):
         match opcao:
             case 0:
                 MenuPrincipal(sistema)
+                break
 
-            case 1:  # login
+            case 1:
                 nome_cliente = input("Introduza o nome do cliente - ")
                 if sistema.loginCliente(nome_cliente):
                     menuCliente(sistema, nome_cliente)
+                    break
                 else:
                     print("Cliente não registado")
 
@@ -63,12 +69,13 @@ def menuClienteLogin(sistema):
                 print("Registro completo")
 
                 menuClienteLogin(sistema)
+                break
             case _:
                 print("Opção inválida")
 
 def menuCliente(sistema, nome):
     while True:
-        print("\n--- Menu Login Estafeta ---\n")
+        print("\n--- Menu Cliente ---\n")
         print("1 - Fazer encomenda")
         print("2 - Avaliar Estafetas que fizeram entrega")
         print("0 - Voltar")
@@ -81,12 +88,15 @@ def menuCliente(sistema, nome):
         match opcao:
             case 0:
                 menuClienteLogin(sistema)
+                break
 
             case 1:  
                 menuClienteFazerEncomenda(sistema, nome)
+                break
 
             case 2:  
                 menuAvaliarEstafetas(sistema, nome)
+                break
 
             case _:
                 print("Opção inválida")
@@ -120,7 +130,7 @@ def menuAvaliarEstafetas(sistema, nome):
 
 
 def menuClienteFazerEncomenda(sistema, nome):
-    print("\n--- Menu Cliente ---")
+    print("\n--- Menu Fazer Encomenda ---")
 
     while (peso := float(input("\nPeso da Encomenda: "))) > 100 or peso <= 0:
         print("Peso não suportado.")
@@ -140,13 +150,16 @@ def menuClienteFazerEncomenda(sistema, nome):
 
     if estafeta == None:
         print("Prazo de entrega é muito curto para a localidade que escolheu")
-        menuClienteLogin(sistema)
+        menuCliente(sistema, nome)
 
-    if (input(f"O preço da encomenda é {sistema.definePreco(estafeta.veiculo, volume, distancia, tempoPedido)}. Deseja aceitar? (S ou N): ").lower() == "s"):
+    precoenc = sistema.definePreco(estafeta.veiculo, volume, distancia, tempoPedido)
+    precoformatado = round(precoenc, 2)
+
+    if (input(f"O preço da encomenda é {precoformatado}. Deseja aceitar? (S ou N): ").lower() == "s"):
         enc = sistema.novaEncomenda(local, peso, volume, tempoPedido, distancia, nome)
         estafeta.adicionaEnc(enc.id)
     else:
-        MenuPrincipal(sistema)
+        menuCliente(sistema, nome)
 
 def menuEstafetaLogin(sistema):
     while True:
@@ -161,14 +174,14 @@ def menuEstafetaLogin(sistema):
             opcao = -1
 
         match opcao:
-            case 1:  # login
+            case 1:
                 nome_estafeta = input("\nIntroduza o nome do estafeta - ")
                 if sistema.loginEstafeta(nome_estafeta):
                     menuEstafeta(sistema, nome_estafeta)
                 else:
                     print("Estafeta não registado")
 
-            case 2:  # registro
+            case 2:
                 nome_estafeta = input("Introduza o seu nome: ")
 
                 while not (veiculo := input("Qual é o seu veiculo (bicicleta/mota/carro): ").lower()) in ["bicicleta","mota","carro"]:
@@ -178,6 +191,7 @@ def menuEstafetaLogin(sistema):
 
             case 0:
                 MenuPrincipal(sistema)
+                break
 
             case _:
                 print("Opção inválida")
@@ -197,19 +211,21 @@ def menuEstafeta(sistema, nome):
         match opcao:
             case 1:
                 menuEncomendasEstafeta(sistema, nome)
+                break
             case 2:
                 menuRankings(sistema, nome)
+                break
             case 0:
                 menuEstafetaLogin(sistema)
+                break
 
 def extractIdsLocalsString(encomendasString):
     idsLocalsString = {}
     
-    # Encontrar todas as ocorrências de "ID: "
     indexIds = [index for index, palavra in enumerate(encomendasString.split()) if palavra == "ID:"]
 
     for indexId in indexIds:
-        encIdString = encomendasString.split()[indexId + 1].replace(',', '')  # Remover vírgula
+        encIdString = encomendasString.split()[indexId + 1].replace(',', '')
         encId = int(encIdString)
         local_index = encomendasString.find("Local de Entrega:", indexId)
         local = encomendasString[local_index:].split(": ")[1].split("\n")[0]
@@ -219,8 +235,8 @@ def extractIdsLocalsString(encomendasString):
 
 
 def sistemaAtribuiPacote(sistema, nome):
-    while not (heur := input("Insere a heurtistica (melhor caminho/menor transito/estrada com melhor qualidade): ").lower()) in ["melhor caminho","menor transito","estrada com melhor qualidade"]:
-        print("Heurtistica inválida.")
+    while not (heur := input("Insere a heurística (melhor caminho/menor transito/estrada com melhor qualidade): ").lower()) in ["melhor caminho","menor transito","estrada com melhor qualidade"]:
+        print("Heurística inválida.")
 
         match heur:
             case "melhor caminho":
@@ -229,31 +245,30 @@ def sistemaAtribuiPacote(sistema, nome):
                 break
             case "estrada com melhor qualidade":
                 break
-    
-    tempoDemorado = 0
-    distanciaPercorrida = 0
-    localInicio = "Central"
-    caminho = []
-    listaEncomendasEntregar = sistema.formarPacoteEncomendas(nome, tempoDemorado, distanciaPercorrida)
 
-    if len(listaEncomendasEntregar) == 0:
+    localInicio = "Central"
+    
+    caminho = []
+    
+    resposta = sistema.formarPacoteEncomendas(nome)
+
+    if len(resposta[0]) == 0:
         print("Não foi possível formar um pacote de encomendas!")
 
-    for encomenda in listaEncomendasEntregar:
+    for encomenda in resposta[0]:
         match heur:
             case "melhor caminho":
-                caminho = sistema.calculaCaminhoInformada(encomenda.localChegada, "bestpath", localInicio)
+                (caminho,custo) = sistema.calculaCaminhoInformada(encomenda.localChegada, "bestpath", localInicio)
             case "menor transito":
-                caminho = sistema.calculaCaminhoInformada(encomenda.localChegada, "transit", localInicio)
+                (caminho,custo) = sistema.calculaCaminhoInformada(encomenda.localChegada, "transit", localInicio)
             case "estrada com melhor qualidade":
-                caminho = sistema.calculaCaminhoInformada(encomenda.localChegada, "roadquality", localInicio)
+                (caminho,custo) = sistema.calculaCaminhoInformada(encomenda.localChegada, "roadquality", localInicio)
 
         localInicio = encomenda.localChegada
         caminho.append(caminho)
         sistema.removeEncomenda(encomenda.id, nome)
         
-    sistema.repostaPosPacoteEncomenda(userInput2, nome, caminho, distanciaPercorrida, tempoDemorado)
-    
+    sistema.repostaPosPacoteEncomenda(nome, caminho, resposta[1], resposta[2])
 
 
 def menuEncomendasEstafeta(sistema, nome):
@@ -316,7 +331,7 @@ def menuRankings(sistema, nome):
     user_input = int(input("\nIntroduza a sua opcao - "))
     match user_input:
         case 1:
-            sistema.rankingNumEntregasGeral(nome)
+            sistema.rankingMediaAvaliacao(nome)
             menuRankings(sistema, nome)
         case 2:
             sistema.rankingNumEntregasGeral(nome)
@@ -350,13 +365,13 @@ def menuAdmin(sistema):
             case 0:
                 break
 
-            case 1:  # Mostrar Encomendas
+            case 1:
                 print(f"\n--- Entregas ---\n{sistema.mostraEncomendasAdmin()}")
 
-            case 2:  # Mostrar Estafetas
+            case 2:
                 print(f"\n--- Estafetas ---\n{sistema.mostrarEstafetasAdmin()}")
 
-            case 3:  # Mostrar Clientes
+            case 3:
                 print(f"\n--- Clientes ---\n{sistema.mostrarClientesAdmin()}")
 
             case _:

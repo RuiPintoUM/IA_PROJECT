@@ -43,17 +43,17 @@ class Estafeta:
     def verficaViabilidade(self, peso, distancia, tempo):
         match self.veiculo:
             case "bicicleta":  
-                if tempo != 0 and self.tempoBicla(distancia, peso) < tempo:
+                if tempo != 0 and self.tempoBicla(distancia, peso) > tempo:
                     return -1
 
                 return 0
             case "mota": 
-                if tempo != 0 and self.tempoBicla(distancia, peso) < tempo:
+                if tempo != 0 and self.tempoBicla(distancia, peso) > tempo:
                     return -1
                 
                 return 70 * distancia  
             case "carro": 
-                if tempo != 0 and self.tempoCarro(distancia, peso) < tempo:
+                if tempo != 0 and self.tempoCarro(distancia, peso) > tempo:
                     return -1
 
                 return 180 * distancia

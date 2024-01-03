@@ -7,9 +7,9 @@ from Estafeta import Estafeta
 from Cliente import Cliente
 
 class Sistema:
-    def __init__(self):     #  construtor do sistema"
-        self.estafetas = {}  # Dicionário para armazenar estafetas
-        self.encomendas = {}  # Dicionário para armazenar encomendas
+    def __init__(self):     
+        self.estafetas = {}  
+        self.encomendas = {}  
         self.clientes = {}
         self.grafo = Graph()
         self.carregaData()
@@ -29,7 +29,7 @@ class Sistema:
 
     def definePreco(self, veiculo, volume, distancia , prazoEntrega):
         match veiculo:
-            case "bicileta":
+            case "bicicleta":
                 if prazoEntrega == 0:
                     return 3 + volume * 0.1 + distancia * 0.02
                 else:
@@ -80,7 +80,6 @@ class Sistema:
         niveisDeCO2Baixos = -1
 
         for estafeta in self.estafetas.values():
-            print(f"{estafeta.nome}")
             if not estafeta.verificaAddEncomenda(peso):
                 continue
 
@@ -101,7 +100,6 @@ class Sistema:
                     if estafeta.getNumeroEntregas() < estafetaEscolhido.getNumeroEntregas():
                         estafetaEscolhido = estafeta
         
-        #print(f"{estafetaEscolhido.nome} estafeta escolhido ")
         return estafetaEscolhido
 
     def respostaPosEncomenda(self, idEnc, nome, caminho):
@@ -111,17 +109,20 @@ class Sistema:
         for node in caminho:
             print(str(node))
 
-        print(f"Encomenda demorou {self.getEstafeta(nome).tempoEncomenda(enc.distancia, enc.peso)} horas a ser entregue.")
+        tempoEntrega = self.getEstafeta(nome).tempoEncomenda(enc.distancia, enc.peso)
+        tempoFormatado = round(tempoEntrega, 2)
+
+        print(f"Encomenda demorou {tempoFormatado} horas a ser entregue.")
         print(f"Encomenda foi entregue de {self.getEstafeta(nome).veiculo}.")
         print(f"A distancia percorrida foi de {enc.distancia}km.")
 
 
     def repostaPosPacoteEncomenda(self, nome, caminho, distancia, tempoDemorado):
-        
+        print("--- Caminho Efetuado ---")
         for node in caminho:
             print(str(node))
         
-        print(f"Encomenda demorou {tempoDemorado} horas a ser entregue.")
+        print(f"\nEncomenda demorou {tempoDemorado} horas a ser entregue.")
         print(f"Encomenda foi entregue de {self.getEstafeta(nome).veiculo}.")
         print(f"A distancia percorrida foi de {distancia}km.")
 
@@ -157,10 +158,6 @@ class Sistema:
 
             case "carro":
                 return 100 - espacoOcupado
-
-    def printanomes(self):
-        for estafeta in self.estafetas.values():
-            print(estafeta.nome)
 
     def mostrarEncomendasEstafetas(self, nome):
         estafeta = self.estafetas.get(nome)
@@ -260,10 +257,19 @@ class Sistema:
         return min_result
 
 
-    def formarPacoteEncomendas(self, nome, tempoDemorado, distanciaPercorrida):
+    def formarPacoteEncomendas(self, nome):
         estafeta = self.estafetas.get(nome)
-        listaEnc = estafeta.getEncomendas()
-        listaEnc = sorted(listaEnc, key=lambda enc: (enc.tempoPedido == 0, enc.tempoPedido))
+        listaEncId = estafeta.getEncomendas()
+        
+        tempoDemorado = 0
+        distanciaPercorrida = 0
+        
+        listaEnc = []
+
+        for idEnc in listaEncId:
+            listaEnc.append(self.encomendas[idEnc])
+        
+        listaEnc = sorted(listaEnc, key=lambda encomenda: (encomenda.tempoPedido == 0, encomenda.tempoPedido))
 
         encomendasEntregar = [] 
         Pesoqueleva = 0
@@ -279,19 +285,22 @@ class Sistema:
                     encomendasEntregar.append(enc)
                     tempoDemorado += tempo
 
+        resposta = []
+        resposta.append(encomendasEntregar)
+        resposta.append(distanciaPercorrida)
+        resposta.append(tempoDemorado)
 
-        return encomendasEntregar
+        return resposta
 
     # --- Rankings ---
 
-    # Ranking de top 5 de estafetas com melhor classificação média
     def rankingMediaAvaliacao(self, nome_estafeta):
         sorted_estafetas = sorted(self.estafetas.values(), key=lambda estafeta: estafeta.getMedAval(), reverse=True)
         position = next((i+1 for i, estafeta in enumerate(sorted_estafetas) if estafeta.nome == nome_estafeta), None)
         
         print("\n____________________\n")
         for i, estafeta in enumerate(sorted_estafetas[:5]):
-            print(f"{i+1}. {nome_estafeta} - Média de avaliação: {estafeta.getMedAval()}")
+            print(f"{i+1}. {estafeta.nome} - Média de avaliação: {estafeta.getMedAval()}")
         
         print("\n____________________\n")
         
@@ -396,7 +405,7 @@ class Sistema:
                 "volume": encomenda.volume,
                 "tempo": encomenda.tempoPedido,
                 "dist": encomenda.distancia,
-                "nome": encomenda.distancia
+                "nome": encomenda.cliente
             }
             existing_data.append(new_encomenda_data)
 

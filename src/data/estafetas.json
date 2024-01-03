@@ -4,45 +4,49 @@
     "status": 0,
     "veiculo": "carro",
     "listEnc": [],
-    "numEntregas": 2,
-    "somaClass": 0
+    "numEntregas": 5,
+    "somaClass": 25
   },
   {
     "nome": "Rui",
     "status": 0,
     "veiculo": "bicicleta",
-    "listEnc": [],
-    "numEntregas": 0,
-    "somaClass": 0
+    "listEnc": [
+      2
+    ],
+    "numEntregas": 4,
+    "somaClass": 17
   },
   {
     "nome": "Hugo",
     "status": 0,
     "veiculo": "mota",
     "listEnc": [
+      0,
       3,
-      4,
-      5
+      5,
+      6,
+      7
     ],
-    "numEntregas": 0,
-    "somaClass": 0
+    "numEntregas": 8,
+    "somaClass": 18
   },
   {
     "nome": "Juks",
     "status": 0,
     "veiculo": "carro",
     "listEnc": [
-      1
+      4
     ],
-    "numEntregas": 0,
-    "somaClass": 0
+    "numEntregas": 8,
+    "somaClass": 24
   },
   {
     "nome": "Ricardo",
     "status": 0,
     "veiculo": "bicicleta",
     "listEnc": [],
-    "numEntregas": 0,
-    "somaClass": 0
+    "numEntregas": 8,
+    "somaClass": 20
   }
 ]
