@@ -19,9 +19,6 @@ class Estafeta:
         else:
             return self.somaClassificacoes/self.numEntregas
 
-    def adicionaClass(self, valor):
-        self.somaClassificacoes += valor
-
     def adicionaEnc(self, idEnc):
         self.encPorEntregar.append(idEnc)
     

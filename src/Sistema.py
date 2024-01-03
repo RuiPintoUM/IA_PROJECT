@@ -20,13 +20,13 @@ class Sistema:
     def localidadeExiste(self, nome):
         return self.grafo.locationExists(nome)
     
-    def novaEncomenda(self, local, peso, volume, tempoPedido, distancia):
+    def novaEncomenda(self, local, peso, volume, tempoPedido, distancia, nome):
         if self.encomendas:
             id = list(self.encomendas.items())[-1][0] + 1
         else:
             id = 0
 
-        enc = Encomenda(id, local, peso, volume, tempoPedido, distancia)
+        enc = Encomenda(id, local, peso, volume, tempoPedido, distancia, nome)
         self.encomendas[id] = enc
         return enc
 
@@ -136,7 +136,8 @@ class Sistema:
                 "peso": encomenda.peso,
                 "volume": encomenda.volume,
                 "tempo": encomenda.tempoPedido,
-                "dist": encomenda.distancia
+                "dist": encomenda.distancia,
+                "nome": encomenda.distancia
             }
             existing_data.append(new_encomenda_data)
 
@@ -186,7 +187,8 @@ class Sistema:
                     peso=encomenda_data["peso"],
                     volume=encomenda_data["volume"],
                     tempoPedido=encomenda_data["tempo"],
-                    distancia=encomenda_data["dist"]
+                    distancia=encomenda_data["dist"],
+                    nome=encomenda_data["nome"]
                 )
                 self.encomendas[encomenda_data["id"]] = encomenda
 
@@ -212,12 +214,19 @@ class Sistema:
         print(f"Encomenda foi entregue de {self.getEstafeta(nome).veiculo}.")
         print(f"A distancia percorrida foi de {enc.distancia}km.")
 
+
     def removeEncomenda(self, idEnc, nome):
 
         estafeta = self.getEstafeta(nome)
+        encomenda = self.encomendas[idEnc]
         estafeta.encPorEntregar.remove(idEnc)
+
         del self.encomendas[idEnc]
         estafeta.numEntregas += 1
+
+        cliente = self.clientes[encomenda.cliente]
+        cliente.adicionaEstafetaParaAva(nome, idEnc)
+
 
     def getEncomenda(self, idEnc):
         return self.encomendas.get(idEnc)

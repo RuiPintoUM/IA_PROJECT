@@ -5,7 +5,8 @@
     "peso": 19.0,
     "volume": 50.0,
     "tempo": 0.0,
-    "dist": 7.0
+    "dist": 7.0,
+    "nome": "Rui"
   },
   {
     "id": 1,
@@ -13,7 +14,8 @@
     "peso": 19.0,
     "volume": 30.0,
     "tempo": 0.0,
-    "dist": 7.0
+    "dist": 7.0,
+    "nome": "Rui"
   },
   {
     "id": 3,
@@ -21,7 +23,8 @@
     "peso": 20.0,
     "volume": 10.0,
     "tempo": 0.0,
-    "dist": 7.0
+    "dist": 7.0,
+    "nome": "Rui"
   },
   {
     "id": 4,
@@ -29,7 +32,8 @@
     "peso": 20.0,
     "volume": 10.0,
     "tempo": 0.0,
-    "dist": 7.0
+    "dist": 7.0,
+    "nome": "Salomé"
   },
   {
     "id": 5,
@@ -37,6 +41,7 @@
     "peso": 10.0,
     "volume": 10.0,
     "tempo": 0.0,
-    "dist": 26.0
+    "dist": 26.0,
+    "nome": "Salomé"
   }
 ]

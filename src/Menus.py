@@ -95,9 +95,9 @@ def menuAvaliarEstafetas(sistema, nome):
         print("-> Não há estafetas para avaliar!")
     else:
         for estafeta in estafetas:
-            print(f"{i} -> {estafeta[1]} da encomenda {estafeta[0]}")
+            print(f"{i} -> {estafeta[1].nome} da encomenda de id {estafeta[0]}")
             i += 1
-    print("0 -> Voltar")
+    print("\n0 -> Voltar")
     opcao = int(input("Introduza a sua opcao - "))
 
     if opcao == 0:
@@ -105,8 +105,8 @@ def menuAvaliarEstafetas(sistema, nome):
     elif 1 <= opcao <= i:
         aval = int(input("Avalie de 0 a 5 - "))
         cliente = sistema.clientes[nome]
-        cliente.removeEstafetaParaAva(estafetas[i-1][0])
-        estafetas[i-1][1].adicionaClass(aval)
+        cliente.removeEstafetaParaAva(estafetas[opcao-1][0])
+        sistema.atribuiAvaliacao(estafetas[opcao-1][1], aval)
 
         menuAvaliarEstafetas(sistema, nome)
     else:
@@ -137,7 +137,7 @@ def menuClienteFazerEncomenda(sistema, nome):
         menuClienteLogin(sistema)
 
     if (input(f"O preço da encomenda é {sistema.definePreco(estafeta.veiculo, volume, distancia, tempoPedido)}. Deseja aceitar? (S ou N): ").lower() == "s"):
-        enc = sistema.novaEncomenda(local, peso, volume, tempoPedido, distancia)
+        enc = sistema.novaEncomenda(local, peso, volume, tempoPedido, distancia, nome)
         estafeta.adicionaEnc(enc.id)
     else:
         MenuPrincipal(sistema)
@@ -226,7 +226,7 @@ def menuEncomendasEstafeta(sistema, nome):
         (caminho, custo) = sistema.calculaMelhorCaminho(local, "transit")
         sistema.respostaPosEncomenda(user_input, nome, caminho)
 
-        sistema.removeEncomenda(user_input ,nome)
+        sistema.removeEncomenda(user_input, nome)
 
         menuEstafeta(sistema, nome)
     else:
