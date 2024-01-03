@@ -1,9 +1,7 @@
 from Grafo import Graph
-#from Mapa import fill_graph, heuristicaCombustivel, heuristicaTemporais, heuristicaTransito
 from Sistema import Sistema
 
 def MenuPrincipal(sistema):
-    opcao = -1
     while True:
         print("\n--- Menu Principal ---\n")
         print("1 - Interface Cliente")
@@ -12,7 +10,10 @@ def MenuPrincipal(sistema):
         print("4 - Guardar estado")
         print("0 - Sair")
 
-        opcao = int(input("Introduza a sua opcao - "))
+        try:
+            opcao = int(input("\nIntroduza a sua opção - "))
+        except ValueError:
+            opcao = -1
 
         match opcao:
             case 0:
@@ -36,19 +37,23 @@ def MenuPrincipal(sistema):
 
 
 def menuClienteLogin(sistema):
+    while True:
         print("\n--- Menu Login Cliente ---\n")
         print("1 - Login")
         print("2 - Registar Cliente")
         print("0 - Voltar")
 
-        opcao = int(input("Introduza a sua opcao - "))
+        try:
+            opcao = int(input("\nIntroduza a sua opção - "))
+        except ValueError:
+            opcao = -1
 
         match opcao:
             case 0:
                 MenuPrincipal(sistema)
 
             case 1:  # login
-                nome_cliente = input("Introduza o nome do cliente-> ")
+                nome_cliente = input("Introduza o nome do cliente - ")
                 if sistema.loginCliente(nome_cliente):
                     menuCliente(sistema, nome_cliente)
                 else:
@@ -65,45 +70,49 @@ def menuClienteLogin(sistema):
                 print("Opção inválida")
 
 def menuCliente(sistema, nome):
-    print("\n--- Menu Login Estafeta ---\n")
-    print("1 - Fazer encomenda")
-    print("2 - Avaliar Estafetas que fizeram entrega")
-    print("0 - Voltar")
+    while True:
+        print("\n--- Menu Login Estafeta ---\n")
+        print("1 - Fazer encomenda")
+        print("2 - Avaliar Estafetas que fizeram entrega")
+        print("0 - Voltar")
 
-    opcao = int(input("Introduza a sua opcao - "))
+        try:
+            opcao = int(input("\nIntroduza a sua opção - "))
+        except ValueError:
+            opcao = -1
 
-    match opcao:
-        case 0:
-            menuClienteLogin(sistema)
+        match opcao:
+            case 0:
+                menuClienteLogin(sistema)
 
-        case 1:  
-            menuClienteFazerEncomenda(sistema, nome)
+            case 1:  
+                menuClienteFazerEncomenda(sistema, nome)
 
-        case 2:  
-            menuAvaliarEstafetas(sistema, nome)
+            case 2:  
+                menuAvaliarEstafetas(sistema, nome)
 
-        case _:
-            print("Opção inválida")
+            case _:
+                print("Opção inválida")
 
 
 def menuAvaliarEstafetas(sistema, nome):
     estafetas = sistema.getEstafetasParaAvaliar(nome)
     i = 1
 
-    print("--- Estafetas para Avaliar ---")
+    print("\n--- Estafetas para Avaliar ---\n")
     if(len(estafetas) == 0):
-        print("-> Não há estafetas para avaliar!")
+        print("Não há estafetas para avaliar!")
     else:
         for estafeta in estafetas:
             print(f"{i} -> {estafeta[1].nome} da encomenda de id {estafeta[0]}")
             i += 1
-    print("\n0 -> Voltar")
-    opcao = int(input("Introduza a sua opcao - "))
+    print("\n0 - Voltar")
+    opcao = int(input("\nIntroduza a sua opcao - "))
 
     if opcao == 0:
         menuCliente(sistema, nome)
     elif 1 <= opcao <= i:
-        aval = int(input("Avalie de 0 a 5 - "))
+        aval = int(input("\nAvalie de 0 a 5 - "))
         cliente = sistema.clientes[nome]
         cliente.removeEstafetaParaAva(estafetas[opcao-1][0])
         sistema.atribuiAvaliacao(estafetas[opcao-1][1], aval)
@@ -143,21 +152,20 @@ def menuClienteFazerEncomenda(sistema, nome):
         MenuPrincipal(sistema)
 
 def menuEstafetaLogin(sistema):
-    opcao = -1
     while True:
         print("\n--- Menu Login Estafeta ---\n")
         print("1 - Login")
         print("2 - Registar novo estafeta")
         print("0 - Voltar")
 
-        opcao = int(input("Introduza a sua opcao - "))
+        try:
+            opcao = int(input("\nIntroduza a sua opção - "))
+        except ValueError:
+            opcao = -1
 
         match opcao:
-            case 0:
-                break
-
             case 1:  # login
-                nome_estafeta = input("Introduza o nome do estafeta-> ")
+                nome_estafeta = input("\nIntroduza o nome do estafeta - ")
                 if sistema.loginEstafeta(nome_estafeta):
                     menuEstafeta(sistema, nome_estafeta)
                 else:
@@ -171,31 +179,33 @@ def menuEstafetaLogin(sistema):
                 sistema.adicionarEstafeta(nome_estafeta, 0, veiculo)
                 print("Registro completo")
 
+            case 0:
+                MenuPrincipal(sistema)
+
             case _:
                 print("Opção inválida")
+            
 
                 
 def menuEstafeta(sistema, nome):
-    print("\n--- Menu Estafeta ---\n")
-    print("1 - Verificar encomendas disponíveis")
-    print("2 - Rankings")
-    print("3 - Alterar Status")
-    print("4 - Trabalhos para Efetuar")
-    print("0 - Sair")
+    while True:
+        print("\n--- Menu Estafeta ---\n")
+        print("1 - Verificar encomendas disponíveis")
+        print("2 - Rankings")
+        print("0 - Voltar")
 
-    user_input = int(input("Introduza a sua opcao - "))
+        try:
+            opcao = int(input("\nIntroduza a sua opção - "))
+        except ValueError:
+            opcao = -1
 
-    match user_input:
-        case 1:
-            menuEncomendasEstafeta(sistema, nome)
-        case 2:
-            menuRankings(sistema, nome)
-        case 3:
-            print("por fazer")
-        case 4:
-            pass
-        case 0:
-            menuEstafetaLogin(sistema)
+        match opcao:
+            case 1:
+                menuEncomendasEstafeta(sistema, nome)
+            case 2:
+                menuRankings(sistema, nome)
+            case 0:
+                menuEstafetaLogin(sistema)
 
 def extractIdsLocalsString(encomendasString):
     idsLocalsString = {}
@@ -212,36 +222,63 @@ def extractIdsLocalsString(encomendasString):
 
     return idsLocalsString
 
+
+#def sistemaAtribuiPacote(siste
+
 def menuEncomendasEstafeta(sistema, nome):
-    print("--- Encomendas para Entrega diponíveis ---")
+    print("\n--- Encomendas para Entrega diponíveis ---\n")
     encomendasString = sistema.mostrarEncomendasEstafetas(nome)
 
     idsLocalsString = extractIdsLocalsString(encomendasString)
 
-    user_input = int(input("\nIntroduza o ID da Encomenda - "))
-    
-    if user_input in idsLocalsString:
-        local = idsLocalsString[user_input]
-        
-        (caminho, custo) = sistema.calculaMelhorCaminho(local, "transit")
-        sistema.respostaPosEncomenda(user_input, nome, caminho)
+    print("\n1 - Escolher uma Encomenda")
+    print("2 - Fazer o Sistema atribuir pacote de encomendas")
+    print("0 - Voltar")
 
-        sistema.removeEncomenda(user_input, nome)
+    userInput1 = int(input("\nIntroduza a sua opcao - "))
 
-        menuEstafeta(sistema, nome)
-    else:
-        print("ID da encomenda não válido. Tente novamente.")
-        menuEncomendasEstafeta(sistema, nome)
+    match userInput1:
+        case 1:
+            
+            userInput2 = None
+
+            while(userInput2 not in idsLocalsString):
+                userInput2 = int(input("\nIntroduza o ID da Encomenda - "))
+                
+            if userInput2 in idsLocalsString:
+                local = idsLocalsString[userInput2]
+
+                #(caminho, custo) = sistema.calculaMelhorCaminho(local, "transit")
+
+                while not (heur := input("Insere a heurtistica (melhor caminho/menos transito/melhor qualidade estrada): ").lower()) in ["melhor caminho","menos transito","melhor qualidade estrada"]:
+                    print("Heurtistica inválida.")
+
+                (caminho, custo) = sistema.calculaCaminhoInformada(local, heur)
+                
+                sistema.respostaPosEncomenda(userInput2, nome, caminho)
+
+                sistema.removeEncomenda(userInput2, nome)
+
+                menuEstafeta(sistema, nome)
+            else:
+                print("\nID da encomenda não válido. Tente novamente.")
+                
+        case 2:
+            menuRankings(sistema, nome)
+            
+        case 0:
+            menuEstafetaLogin(sistema)
+
     
 def menuRankings(sistema, nome):
-    print("1 - Top 5 ranking estafetas com melhor avaliação média") 
+    print("\n1 - Top 5 ranking estafetas com melhor avaliação média") 
     print("2 - Top 5 ranking de estafetas com mais entregas feitas")
     print("3 - Top 5 ranking de estafetas com mais entregas de carro feitas")
     print("4 - Top 5 ranking de estafetas com mais entregas de mota feitas")
     print("5 - Top 5 ranking de estafetas com mais entregas de bicicleta feitas")
-    print("0 - Sair")
+    print("\n0 - Voltar")
 
-    user_input = int(input("Introduza a sua opcao-> "))
+    user_input = int(input("\nIntroduza a sua opcao - "))
     match user_input:
         case 1:
             sistema.rankingNumEntregasGeral(nome)
@@ -262,14 +299,16 @@ def menuRankings(sistema, nome):
             menuEstafeta(sistema, nome)
         
 def menuAdmin(sistema):
-    opcao = -1
     while True: 
         print("\n--- Menu Administrador ---\n")
         print("1 - Mostrar Encomendas")
         print("2 - Mostrar Estafetas")
         print("0 - Voltar")
         
-        opcao = int(input("Introduza a sua opcao - "))
+        try:
+            opcao = int(input("\nIntroduza a sua opção - "))
+        except ValueError:
+            opcao = -1
 
         match opcao:
             case 0:

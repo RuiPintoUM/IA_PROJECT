@@ -3,10 +3,8 @@
     "nome": "Luis",
     "status": 0,
     "veiculo": "carro",
-    "listEnc": [
-      0
-    ],
-    "numEntregas": 1,
+    "listEnc": [],
+    "numEntregas": 2,
     "somaClass": 0
   },
   {

@@ -1,21 +1,12 @@
 [
   {
-    "id": 0,
-    "local": "Rua de Barros",
-    "peso": 19.0,
-    "volume": 50.0,
-    "tempo": 0.0,
-    "dist": 7.0,
-    "nome": "Rui"
-  },
-  {
     "id": 1,
     "local": "Rua de Barros",
     "peso": 19.0,
     "volume": 30.0,
     "tempo": 0.0,
     "dist": 7.0,
-    "nome": "Rui"
+    "nome": 7.0
   },
   {
     "id": 3,
@@ -24,7 +15,7 @@
     "volume": 10.0,
     "tempo": 0.0,
     "dist": 7.0,
-    "nome": "Rui"
+    "nome": 7.0
   },
   {
     "id": 4,
@@ -33,7 +24,7 @@
     "volume": 10.0,
     "tempo": 0.0,
     "dist": 7.0,
-    "nome": "Salomé"
+    "nome": 7.0
   },
   {
     "id": 5,
@@ -42,6 +33,6 @@
     "volume": 10.0,
     "tempo": 0.0,
     "dist": 26.0,
-    "nome": "Salomé"
+    "nome": 26.0
   }
 ]

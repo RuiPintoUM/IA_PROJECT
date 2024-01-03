@@ -7,9 +7,6 @@ import matplotlib.pyplot as plt  # idem
 
 from Nodo import Node
 
-
-
-
 class Graph:
 
     def __init__(self, directed=False):
@@ -36,6 +33,9 @@ class Graph:
 
         for node, heuristic_value in loaded_data["transit"].items():
             self.add_heuristica(node, heuristic_value, "transit")
+
+        for node, heuristic_value in loaded_data["roadquality"].items():
+            self.add_heuristica(node, heuristic_value, "roadquality")
 
     def locationExists(self, name):
         for node in self.m_nodes:

@@ -3,13 +3,10 @@ import os
 from Grafo import Graph
 from Encomenda import Encomenda
 from Estafeta import Estafeta
-import time
 
 from Cliente import Cliente
 
-
 class Sistema:
-
     def __init__(self):     #  construtor do sistema"
         self.estafetas = {}  # Dicionário para armazenar estafetas
         self.encomendas = {}  # Dicionário para armazenar encomendas
@@ -257,7 +254,7 @@ class Sistema:
 
         listaEnc = estafeta.getEncomendas()
         
-        encomendas_string = ""  # String para armazenar informações das encomendas
+        encomendas_string = "" 
 
         for encomendaId in listaEnc:
             encomenda = self.encomendas.get(encomendaId)
@@ -298,14 +295,14 @@ class Sistema:
         print(len(estafeta.encomenda_ids))
         return estafeta.somaClassificacoes / len(estafeta.encomenda_ids)
     
-    def calculaMelhorCaminho(self, local, heuristic):
-        result_BFS = self.grafo.procura_BFS("Central", local)
+    def calculaMelhorCaminho(self, local, heuristic, localInicio):
+        result_BFS = self.grafo.procura_BFS(localInicio, local)
         print(f"BFS: {result_BFS}")
-        result_DFS = self.grafo.procura_DFS("Central", local)
+        result_DFS = self.grafo.procura_DFS(localInicio, local)
         print(f"DFS: {result_DFS}")
-        result_Greedy = self.grafo.greedy("Central", local, heuristic)
+        result_Greedy = self.grafo.greedy(localInicio, local, heuristic)
         print(f"Greedy: {result_Greedy}")
-        result_Astar = self.grafo.procura_aStar("Central", local, heuristic)
+        result_Astar = self.grafo.procura_aStar(localInicio, local, heuristic)
         print(f"AStar: {result_Astar}")
 
         results = [result_BFS, result_DFS, result_Greedy, result_Astar]
@@ -323,10 +320,10 @@ class Sistema:
         return min_result
     
     ## analisar isto
-    def calculaMelhorCaminhoEntrega(self, local):
-        result_Greedy = self.grafo.greedy("Central", local, "transit")
+    def calculaCaminhoInformada(self, local, heuristic):
+        result_Greedy = self.grafo.greedy("Central", local, heuristic)
         print(result_Greedy)
-        result_Astar = self.grafo.procura_aStar("Central", local, "transit")
+        result_Astar = self.grafo.procura_aStar("Central", local, heuristic)
         print(result_Astar)
 
         results = [result_Greedy, result_Astar]
@@ -343,6 +340,29 @@ class Sistema:
 
         return min_result
 
+
+    def formarPacoteEncomendas(self, nome):
+        estafeta = self.estafetas.get(nome)
+        listaEnc = estafeta.getEncomendas()
+        listaEnc = sorted(listaEnc, key=lambda enc: (enc.tempoPedido == 0, enc.tempoPedido))
+
+        encomendasEntregar = [] 
+        Pesoqueleva = 0
+        acumulador = 0 
+        tempoDemorado = 0
+
+        for enc in listaEnc: 
+            acumulador = Pesoqueleva + enc.peso 
+            tempo = estafeta.tempoEncomenda(enc.distancia, enc.peso)
+        
+            if estafeta.verificaAddEncomenda(acumulador):
+                if enc.tempoPedido == 0 or tempo + tempoDemorado <= enc.tempoPedido:
+                    encomendasEntregar.append(enc)
+                    tempoDemorado += tempo
+
+
+        return encomendasEntregar
+
     # --- Rankings ---
 
     # Ranking de top 5 de estafetas com melhor classificação média
@@ -350,61 +370,65 @@ class Sistema:
         sorted_estafetas = sorted(self.estafetas.values(), key=lambda estafeta: estafeta.getMedAval(), reverse=True)
         position = next((i+1 for i, estafeta in enumerate(sorted_estafetas) if estafeta.nome == nome_estafeta), None)
         
+        print("\n____________________\n")
         for i, estafeta in enumerate(sorted_estafetas[:5]):
             print(f"{i+1}. {nome_estafeta} - Média de avaliação: {estafeta.getMedAval()}")
         
         print("\n____________________\n")
         
         if position is not None:
-            print(f"[{nome_estafeta}], encontras-te na posição nº {position}")
+            print(f"[{nome_estafeta}], encontras-te na posição nº {position}\n")
         else:
-            print(f"Estafeta {nome_estafeta} não encontrado no ranking de média de avaliação")
+            print(f"Estafeta {nome_estafeta} não encontrado no ranking de média de avaliação\n")
             
     # ranking de estafetas com mais entregas no geral
     def rankingNumEntregasGeral(self, nome_estafeta):
         sorted_estafetas = sorted(self.estafetas.values(), key=lambda estafeta: estafeta.numEntregas, reverse=True)
         position = next((i+1 for i, estafeta in enumerate(sorted_estafetas) if estafeta.nome == nome_estafeta), None)
         
+        print("\n____________________\n")
         for i, estafeta in enumerate(sorted_estafetas[:5]):
             print(f"{i+1}. {estafeta.nome} - Número de Entregas: {estafeta.numEntregas}")
             
         print("\n____________________\n")
         
         if position is not None:
-            print(f"[{nome_estafeta}], encontras-te na posição nº {position}")
+            print(f"[{nome_estafeta}], encontras-te na posição nº {position}\n")
         else:
-            print(f"Estafeta {nome_estafeta} não encontrado no ranking de maior número de entregas")
+            print(f"Estafeta {nome_estafeta} não encontrado no ranking de maior número de entregas\n")
             
     #ranking de numero de entregas de Mota, bicicleta e carro respetivamente
     def rankingNumEntregasMota(self, nome_estafeta):
-        sorted_estafetas_mota = sorted([estafeta for estafeta in self.estafetas.values if estafeta.veiculo == 'mota'],
+        sorted_estafetas_mota = sorted([estafeta for estafeta in self.estafetas.values() if estafeta.veiculo == 'mota'],
                                        key=lambda estafeta: estafeta.numEntregas, reverse=True)
-        position = next((i + 1 for i, estafeta in sorted_estafetas_mota if estafeta.nome == nome_estafeta), None)
+        position = next((i + 1 for i, estafeta in enumerate(sorted_estafetas_mota) if estafeta.nome == nome_estafeta), None)
         
+        print("\n____________________\n")
         for i, estafeta in enumerate(sorted_estafetas_mota[:5]):
             print(f"{i+1}. {estafeta.nome} - Número de entregas: {estafeta.numEntregas}")
             
         print("\n____________________\n")
         
         if position is not None:
-            print(f"[{nome_estafeta}], encontras-te na posição nº {position}")
+            print(f"[{nome_estafeta}], encontras-te na posição nº {position}\n")
         else:
-            print(f"Estafeta {nome_estafeta} não encontrado no ranking de maior número de entregas de mota")
+            print(f"Estafeta {nome_estafeta} não encontrado no ranking de maior número de entregas de mota\n")
         
     def rankingNumEntregasBicicleta(self, nome_estafeta):
         sorted_estafetas_bicicleta = sorted([estafeta for estafeta in self.estafetas.values() if estafeta.veiculo == 'bicicleta'],
                                             key=lambda estafeta: estafeta.numEntregas, reverse=True)
         position = next((i + 1 for i, estafeta in enumerate(sorted_estafetas_bicicleta) if estafeta.nome == nome_estafeta), None)
 
+        print("\n____________________\n")
         for i, estafeta in enumerate(sorted_estafetas_bicicleta[:5]):
             print(f"{i + 1}. {estafeta.nome} - Número de Entregas: {estafeta.numEntregas}")
             
         print("\n____________________\n")
             
         if position is not None:
-            print(f"[{nome_estafeta}], encontras-te na posição nº {position}")
+            print(f"[{nome_estafeta}], encontras-te na posição nº {position}\n")
         else:
-            print(f"Estafeta {nome_estafeta} não encontrado no ranking de maior número de entregas de bicicleta")
+            print(f"Estafeta {nome_estafeta} não encontrado no ranking de maior número de entregas de bicicleta\n")
 
 
     def rankingNumEntregasCarro(self, nome_estafeta):
@@ -412,13 +436,14 @@ class Sistema:
                                         key=lambda estafeta: estafeta.numEntregas, reverse=True)
         position = next((i + 1 for i, estafeta in enumerate(sorted_estafetas_carro) if estafeta.nome == nome_estafeta), None)
         
+        print("\n____________________\n")
         for i, estafeta in enumerate(sorted_estafetas_carro[:5]):
             print(f"{i + 1}. {estafeta.nome} - Número de Entregas: {estafeta.numEntregas}")
             
         print("\n____________________\n")
 
         if position is not None:
-            print(f"[{nome_estafeta}], encontras-te na posição nº {position}")
+            print(f"[{nome_estafeta}], encontras-te na posição nº {position}\n")
         else:
-            print(f"Estafeta {nome_estafeta} não encontrado no ranking de maior número de entregas de carro")
+            print(f"Estafeta {nome_estafeta} não encontrado no ranking de maior número de entregas de carro\n")
      

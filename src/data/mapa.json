@@ -75,5 +75,27 @@
     "Rua do Pastor": 9,
     "Rua Vitor Pedro": 19,
     "Rua D. Duarte": 12
-  }
+  },
+  "roadquality": {
+    "Central": 12,
+    "Avenida da Liberdade": 8,
+    "Avenida Doutor Leonardo Coimbra": 6,
+    "Rua de Barros": 10,
+    "Rua Rei Ricardo II": 5,
+    "Rua da Serrinha": 15,
+    "Rua do Cabo": 13,
+    "Rua da Amizade": 9,
+    "Rua do Montejoia": 11,
+    "Rua da Torre": 7,
+    "Rua da Fonte": 20,
+    "Rua da Seara": 17,
+    "Rua dos Canhoes": 10,
+    "Rua do Monte": 13,
+    "Rua da Espadilha": 18,
+    "Rua Gomes de Sa": 9,
+    "Rua de Minhome": 14,
+    "Rua do Pastor": 12,
+    "Rua Vitor Pedro": 8,
+    "Rua D. Duarte": 7
+}
 }

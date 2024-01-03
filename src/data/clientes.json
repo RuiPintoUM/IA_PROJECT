@@ -1,10 +1,12 @@
 [
   {
     "nome": "Rui",
-    "listaEstafetasId": {}
+    "listaEstafetasId": {
+      "0": "Luis"
+    }
   },
   {
-    "nome": "Salomé",
+    "nome": "Salom\u00e9",
     "listaEstafetasId": {}
   }
 ]
