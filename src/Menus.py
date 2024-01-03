@@ -1,6 +1,3 @@
-from Grafo import Graph
-from Sistema import Sistema
-
 def MenuPrincipal(sistema):
     while True:
         print("\n--- Menu Principal ---\n")
@@ -184,8 +181,6 @@ def menuEstafetaLogin(sistema):
 
             case _:
                 print("Opção inválida")
-            
-
                 
 def menuEstafeta(sistema, nome):
     while True:
@@ -223,7 +218,43 @@ def extractIdsLocalsString(encomendasString):
     return idsLocalsString
 
 
-#def sistemaAtribuiPacote(siste
+def sistemaAtribuiPacote(sistema, nome):
+    while not (heur := input("Insere a heurtistica (melhor caminho/menor transito/estrada com melhor qualidade): ").lower()) in ["melhor caminho","menor transito","estrada com melhor qualidade"]:
+        print("Heurtistica inválida.")
+
+        match heur:
+            case "melhor caminho":
+                break
+            case "menor transito":
+                break
+            case "estrada com melhor qualidade":
+                break
+    
+    tempoDemorado = 0
+    distanciaPercorrida = 0
+    localInicio = "Central"
+    caminho = []
+    listaEncomendasEntregar = sistema.formarPacoteEncomendas(nome, tempoDemorado, distanciaPercorrida)
+
+    if len(listaEncomendasEntregar) == 0:
+        print("Não foi possível formar um pacote de encomendas!")
+
+    for encomenda in listaEncomendasEntregar:
+        match heur:
+            case "melhor caminho":
+                caminho = sistema.calculaCaminhoInformada(encomenda.localChegada, "bestpath", localInicio)
+            case "menor transito":
+                caminho = sistema.calculaCaminhoInformada(encomenda.localChegada, "transit", localInicio)
+            case "estrada com melhor qualidade":
+                caminho = sistema.calculaCaminhoInformada(encomenda.localChegada, "roadquality", localInicio)
+
+        localInicio = encomenda.localChegada
+        caminho.append(caminho)
+        sistema.removeEncomenda(encomenda.id, nome)
+        
+    sistema.repostaPosPacoteEncomenda(userInput2, nome, caminho, distanciaPercorrida, tempoDemorado)
+    
+
 
 def menuEncomendasEstafeta(sistema, nome):
     print("\n--- Encomendas para Entrega diponíveis ---\n")
@@ -248,12 +279,16 @@ def menuEncomendasEstafeta(sistema, nome):
             if userInput2 in idsLocalsString:
                 local = idsLocalsString[userInput2]
 
-                #(caminho, custo) = sistema.calculaMelhorCaminho(local, "transit")
-
-                while not (heur := input("Insere a heurtistica (melhor caminho/menos transito/melhor qualidade estrada): ").lower()) in ["melhor caminho","menos transito","melhor qualidade estrada"]:
+                while not (heur := input("Insere a heurtistica (melhor caminho/menor transito/estrada com melhor qualidade): ").lower()) in ["melhor caminho","menor transito","estrada com melhor qualidade"]:
                     print("Heurtistica inválida.")
 
-                (caminho, custo) = sistema.calculaCaminhoInformada(local, heur)
+                match heur:
+                    case "melhor caminho":
+                        (caminho, custo) = sistema.calculaCaminhoInformada(local, "bestpath")
+                    case "menor transito":
+                        (caminho, custo) = sistema.calculaCaminhoInformada(local, "transit")
+                    case "estrada com melhor qualidade":
+                        (caminho, custo) = sistema.calculaCaminhoInformada(local, "roadquality")
                 
                 sistema.respostaPosEncomenda(userInput2, nome, caminho)
 
@@ -264,7 +299,7 @@ def menuEncomendasEstafeta(sistema, nome):
                 print("\nID da encomenda não válido. Tente novamente.")
                 
         case 2:
-            menuRankings(sistema, nome)
+            sistemaAtribuiPacote(sistema, nome)
             
         case 0:
             menuEstafetaLogin(sistema)
@@ -303,6 +338,7 @@ def menuAdmin(sistema):
         print("\n--- Menu Administrador ---\n")
         print("1 - Mostrar Encomendas")
         print("2 - Mostrar Estafetas")
+        print("3 - Mostrar Clientes")
         print("0 - Voltar")
         
         try:
@@ -314,11 +350,14 @@ def menuAdmin(sistema):
             case 0:
                 break
 
-            case 1:  # Mostrar Encomendas (reutilizar a função encomendas disponíveis)
+            case 1:  # Mostrar Encomendas
                 print(f"\n--- Entregas ---\n{sistema.mostraEncomendasAdmin()}")
 
             case 2:  # Mostrar Estafetas
                 print(f"\n--- Estafetas ---\n{sistema.mostrarEstafetasAdmin()}")
+
+            case 3:  # Mostrar Clientes
+                print(f"\n--- Clientes ---\n{sistema.mostrarClientesAdmin()}")
 
             case _:
                 print("Opção inválida")

@@ -103,102 +103,6 @@ class Sistema:
         
         #print(f"{estafetaEscolhido.nome} estafeta escolhido ")
         return estafetaEscolhido
-            
-
-    def guardarData(self):
-        map_path = os.path.join('data', 'estafetas.json')
-        existing_data = []
-
-        for estafeta in self.estafetas.values():
-            new_estafeta_data = {
-                "nome": estafeta.nome,
-                "status": estafeta.status,
-                "veiculo": estafeta.veiculo,
-                "listEnc": estafeta.encPorEntregar,
-                "numEntregas": estafeta.numEntregas,
-                "somaClass": estafeta.somaClassificacoes
-            }
-            existing_data.append(new_estafeta_data)
-
-        with open(map_path, 'w') as file:
-            json.dump(existing_data, file, indent=2)
-
-        encomendas_path = os.path.join('data', 'encomendas.json')
-        existing_data = []
-
-        for encomenda in self.encomendas.values():
-            new_encomenda_data = {
-                "id": encomenda.id,
-                "local": encomenda.localChegada,
-                "peso": encomenda.peso,
-                "volume": encomenda.volume,
-                "tempo": encomenda.tempoPedido,
-                "dist": encomenda.distancia,
-                "nome": encomenda.distancia
-            }
-            existing_data.append(new_encomenda_data)
-
-        with open(encomendas_path, 'w') as file:
-            json.dump(existing_data, file, indent=2)
-
-        clientes_path = os.path.join('data', 'clientes.json')
-        existing_data = []
-
-        for cliente in self.clientes.values():
-            new_cliente_data = {
-                "nome": cliente.nome,
-                "listaEstafetasId": cliente.estafetasPorAvaliar,
-            }
-            existing_data.append(new_cliente_data)
-
-        with open(clientes_path, 'w') as file:
-            json.dump(existing_data, file, indent=2)
-
-
-    def carregaData(self):
-        estafetas_path = os.path.join('data', 'estafetas.json')
-        encomendas_path = os.path.join('data', 'encomendas.json')
-        clientes_path = os.path.join('data', 'clientes.json')
-
-        with open(estafetas_path, 'r') as estafetas_file:
-            estafetas_data = json.load(estafetas_file)
-
-            for estafeta_data in estafetas_data:
-                estafeta = Estafeta(
-                    nome=estafeta_data["nome"],
-                    status=estafeta_data["status"],
-                    veiculo=estafeta_data["veiculo"],
-                    encPorEntregar=estafeta_data["listEnc"],
-                    numEntregas=estafeta_data["numEntregas"],
-                    somaClassificacoes=estafeta_data["somaClass"]
-                )
-                self.estafetas[estafeta_data["nome"]] = estafeta
-
-        with open(encomendas_path, 'r') as encomendas_file:
-            encomendas_data = json.load(encomendas_file)
-
-            for encomenda_data in encomendas_data:
-                encomenda = Encomenda(
-                    id=encomenda_data["id"],
-                    localChegada=encomenda_data["local"],
-                    peso=encomenda_data["peso"],
-                    volume=encomenda_data["volume"],
-                    tempoPedido=encomenda_data["tempo"],
-                    distancia=encomenda_data["dist"],
-                    nome=encomenda_data["nome"]
-                )
-                self.encomendas[encomenda_data["id"]] = encomenda
-
-        with open(clientes_path, 'r') as clientes_file:
-            clientes_data = json.load(clientes_file)
-
-            for cliente_data in clientes_data:
-                cliente = Cliente(
-                    nome=cliente_data["nome"],
-                    estafetasPorAvaliar=cliente_data["listaEstafetasId"]
-                )
-                self.clientes[cliente_data["nome"]] = cliente
-
 
     def respostaPosEncomenda(self, idEnc, nome, caminho):
 
@@ -211,6 +115,15 @@ class Sistema:
         print(f"Encomenda foi entregue de {self.getEstafeta(nome).veiculo}.")
         print(f"A distancia percorrida foi de {enc.distancia}km.")
 
+
+    def repostaPosPacoteEncomenda(self, nome, caminho, distancia, tempoDemorado):
+        
+        for node in caminho:
+            print(str(node))
+        
+        print(f"Encomenda demorou {tempoDemorado} horas a ser entregue.")
+        print(f"Encomenda foi entregue de {self.getEstafeta(nome).veiculo}.")
+        print(f"A distancia percorrida foi de {distancia}km.")
 
     def removeEncomenda(self, idEnc, nome):
 
@@ -279,6 +192,13 @@ class Sistema:
         
         return estStr
 
+    def mostrarClientesAdmin(self):
+        cliStr = ""
+        for cli in self.clientes.values():
+            cliStr += f"Nome: {cli.nome}\n"
+        
+        return cliStr
+
     def atribuiEncomenda(self, nome, encomenda):
         estafeta = self.estafetas.get(nome)
 
@@ -295,7 +215,7 @@ class Sistema:
         print(len(estafeta.encomenda_ids))
         return estafeta.somaClassificacoes / len(estafeta.encomenda_ids)
     
-    def calculaMelhorCaminho(self, local, heuristic, localInicio):
+    def calculaMelhorCaminho(self, local, heuristic, localInicio = "Central"):
         result_BFS = self.grafo.procura_BFS(localInicio, local)
         print(f"BFS: {result_BFS}")
         result_DFS = self.grafo.procura_DFS(localInicio, local)
@@ -319,11 +239,10 @@ class Sistema:
 
         return min_result
     
-    ## analisar isto
-    def calculaCaminhoInformada(self, local, heuristic):
-        result_Greedy = self.grafo.greedy("Central", local, heuristic)
+    def calculaCaminhoInformada(self, local, heuristic, localInicio = "Central"):
+        result_Greedy = self.grafo.greedy(localInicio, local, heuristic)
         print(result_Greedy)
-        result_Astar = self.grafo.procura_aStar("Central", local, heuristic)
+        result_Astar = self.grafo.procura_aStar(localInicio, local, heuristic)
         print(result_Astar)
 
         results = [result_Greedy, result_Astar]
@@ -341,17 +260,17 @@ class Sistema:
         return min_result
 
 
-    def formarPacoteEncomendas(self, nome):
+    def formarPacoteEncomendas(self, nome, tempoDemorado, distanciaPercorrida):
         estafeta = self.estafetas.get(nome)
         listaEnc = estafeta.getEncomendas()
         listaEnc = sorted(listaEnc, key=lambda enc: (enc.tempoPedido == 0, enc.tempoPedido))
 
         encomendasEntregar = [] 
         Pesoqueleva = 0
-        acumulador = 0 
-        tempoDemorado = 0
+        acumulador = 0
 
         for enc in listaEnc: 
+            distanciaPercorrida += enc.distancia
             acumulador = Pesoqueleva + enc.peso 
             tempo = estafeta.tempoEncomenda(enc.distancia, enc.peso)
         
@@ -446,4 +365,98 @@ class Sistema:
             print(f"[{nome_estafeta}], encontras-te na posição nº {position}\n")
         else:
             print(f"Estafeta {nome_estafeta} não encontrado no ranking de maior número de entregas de carro\n")
-     
+
+
+    def guardarData(self):
+        map_path = os.path.join('data', 'estafetas.json')
+        existing_data = []
+
+        for estafeta in self.estafetas.values():
+            new_estafeta_data = {
+                "nome": estafeta.nome,
+                "status": estafeta.status,
+                "veiculo": estafeta.veiculo,
+                "listEnc": estafeta.encPorEntregar,
+                "numEntregas": estafeta.numEntregas,
+                "somaClass": estafeta.somaClassificacoes
+            }
+            existing_data.append(new_estafeta_data)
+
+        with open(map_path, 'w') as file:
+            json.dump(existing_data, file, indent=2)
+
+        encomendas_path = os.path.join('data', 'encomendas.json')
+        existing_data = []
+
+        for encomenda in self.encomendas.values():
+            new_encomenda_data = {
+                "id": encomenda.id,
+                "local": encomenda.localChegada,
+                "peso": encomenda.peso,
+                "volume": encomenda.volume,
+                "tempo": encomenda.tempoPedido,
+                "dist": encomenda.distancia,
+                "nome": encomenda.distancia
+            }
+            existing_data.append(new_encomenda_data)
+
+        with open(encomendas_path, 'w') as file:
+            json.dump(existing_data, file, indent=2)
+
+        clientes_path = os.path.join('data', 'clientes.json')
+        existing_data = []
+
+        for cliente in self.clientes.values():
+            new_cliente_data = {
+                "nome": cliente.nome,
+                "listaEstafetasId": cliente.estafetasPorAvaliar,
+            }
+            existing_data.append(new_cliente_data)
+
+        with open(clientes_path, 'w') as file:
+            json.dump(existing_data, file, indent=2)
+
+
+    def carregaData(self):
+        estafetas_path = os.path.join('data', 'estafetas.json')
+        encomendas_path = os.path.join('data', 'encomendas.json')
+        clientes_path = os.path.join('data', 'clientes.json')
+
+        with open(estafetas_path, 'r') as estafetas_file:
+            estafetas_data = json.load(estafetas_file)
+
+            for estafeta_data in estafetas_data:
+                estafeta = Estafeta(
+                    nome=estafeta_data["nome"],
+                    status=estafeta_data["status"],
+                    veiculo=estafeta_data["veiculo"],
+                    encPorEntregar=estafeta_data["listEnc"],
+                    numEntregas=estafeta_data["numEntregas"],
+                    somaClassificacoes=estafeta_data["somaClass"]
+                )
+                self.estafetas[estafeta_data["nome"]] = estafeta
+
+        with open(encomendas_path, 'r') as encomendas_file:
+            encomendas_data = json.load(encomendas_file)
+
+            for encomenda_data in encomendas_data:
+                encomenda = Encomenda(
+                    id=encomenda_data["id"],
+                    localChegada=encomenda_data["local"],
+                    peso=encomenda_data["peso"],
+                    volume=encomenda_data["volume"],
+                    tempoPedido=encomenda_data["tempo"],
+                    distancia=encomenda_data["dist"],
+                    nome=encomenda_data["nome"]
+                )
+                self.encomendas[encomenda_data["id"]] = encomenda
+
+        with open(clientes_path, 'r') as clientes_file:
+            clientes_data = json.load(clientes_file)
+
+            for cliente_data in clientes_data:
+                cliente = Cliente(
+                    nome=cliente_data["nome"],
+                    estafetasPorAvaliar=cliente_data["listaEstafetasId"]
+                )
+                self.clientes[cliente_data["nome"]] = cliente

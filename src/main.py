@@ -1,4 +1,3 @@
-from Grafo import Graph
 from Menus import MenuPrincipal
 from Sistema import Sistema
 
