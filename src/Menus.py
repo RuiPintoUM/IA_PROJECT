@@ -20,7 +20,7 @@ def MenuPrincipal(sistema):
                 break
 
             case 1:  # interface cliente
-                menuClienteFazerEncomenda(sistema)
+                menuClienteLogin(sistema)
 
             case 2:  # interface estafeta
                 menuEstafetaLogin(sistema)
@@ -86,7 +86,32 @@ def menuCliente(sistema, nome):
             print("Opção inválida")
 
 
-    
+def menuAvaliarEstafetas(sistema, nome):
+    estafetas = sistema.getEstafetasParaAvaliar(nome)
+    i = 1
+
+    print("--- Estafetas para Avaliar ---")
+    if(len(estafetas) == 0):
+        print("-> Não há estafetas para avaliar!")
+    else:
+        for estafeta in estafetas:
+            print(f"{i} -> {estafeta[1]} da encomenda {estafeta[0]}")
+            i += 1
+    print("0 -> Voltar")
+    opcao = int(input("Introduza a sua opcao - "))
+
+    if opcao == 0:
+        menuCliente(sistema, nome)
+    elif 1 <= opcao <= i:
+        aval = int(input("Avalie de 0 a 5 - "))
+        cliente = sistema.clientes[nome]
+        cliente.removeEstafetaParaAva(estafetas[i-1][0])
+        estafetas[i-1][1].adicionaClass(aval)
+
+        menuAvaliarEstafetas(sistema, nome)
+    else:
+        print("Opção inválida")
+
 
 def menuClienteFazerEncomenda(sistema, nome):
     print("\n--- Menu Cliente ---")
