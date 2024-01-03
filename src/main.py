@@ -1,6 +1,6 @@
 from Grafo import Graph
 #from Mapa import fill_graph, heuristicaDistanciaLinhaReta #heuristicaCombustivel, heuristicaTemporais, heuristicaTransito
-from Menus import MenuPrincial
+from Menus import MenuPrincipal
 from Sistema import Sistema
 
 def main():
@@ -8,7 +8,7 @@ def main():
     sistema.grafo.load_json('mapa.json')
     #sistema.grafo.desenha()
 
-    MenuPrincial(sistema)
+    MenuPrincipal(sistema)
 
     #sistema.calculaMelhorCaminho("Rua Gomes de Sa")
 

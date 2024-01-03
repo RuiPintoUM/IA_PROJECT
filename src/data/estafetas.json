@@ -3,13 +3,17 @@
     "nome": "Luis",
     "status": 0,
     "veiculo": "carro",
-    "numEntregas": 0,
+    "listEnc": [
+      0
+    ],
+    "numEntregas": 1,
     "somaClass": 0
   },
   {
-    "nome": "Ricardo",
+    "nome": "Rui",
     "status": 0,
     "veiculo": "bicicleta",
+    "listEnc": [],
     "numEntregas": 0,
     "somaClass": 0
   },
@@ -17,20 +21,29 @@
     "nome": "Hugo",
     "status": 0,
     "veiculo": "mota",
+    "listEnc": [
+      3,
+      4,
+      5
+    ],
     "numEntregas": 0,
     "somaClass": 0
   },
   {
-    "nome": "Rui",
-    "status": 0,
-    "veiculo": "bicicleta",
-    "numEntregas": 0,
-    "somaClass": 0
-  },
-  {
-    "nome": "Jorge",
+    "nome": "Juks",
     "status": 0,
     "veiculo": "carro",
+    "listEnc": [
+      1
+    ],
+    "numEntregas": 0,
+    "somaClass": 0
+  },
+  {
+    "nome": "Ricardo",
+    "status": 0,
+    "veiculo": "bicicleta",
+    "listEnc": [],
     "numEntregas": 0,
     "somaClass": 0
   }

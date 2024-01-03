@@ -8,12 +8,6 @@ import matplotlib.pyplot as plt  # idem
 from Nodo import Node
 
 
-# Constructor
-# Methods for adding edges
-# Methods for removing edges
-# Methods for searching a graph
-# BFS, DFS
-# Other interesting methods
 
 
 class Graph:
@@ -37,8 +31,11 @@ class Graph:
             weight = edge["weight"]
             self.add_edge(source, target, weight)
 
-        for node, heuristic_value in loaded_data["heuristics"].items():
-            self.add_heuristica(node, heuristic_value)
+        for node, heuristic_value in loaded_data["bestpath"].items():
+            self.add_heuristica(node, heuristic_value, "bestpath")
+
+        for node, heuristic_value in loaded_data["transit"].items():
+            self.add_heuristica(node, heuristic_value, "transit")
 
     def locationExists(self, name):
         for node in self.m_nodes:
@@ -52,11 +49,8 @@ class Graph:
         else:
             return []
         
-    def getH(self, node):
-        if node in self.m_h:
-            return self.m_h[node]
-        else:
-            return 0
+    def getH(self, node, heuristic):
+        return self.m_h.get(heuristic, {}).get(node, 0)
 
     #############
     #    escrever o grafo como string
@@ -251,10 +245,13 @@ class Graph:
     #    3 heuristica -> Quantidade de transito
     ####################################
 
-    def add_heuristica(self, n, estima):
+    def add_heuristica(self, n, estima, heuristic):
         n1 = Node(n)
+        if heuristic not in self.m_h:
+            self.m_h[heuristic] = {}
+
         if n1 in self.m_nodes:
-            self.m_h[n] = estima
+            self.m_h[heuristic][n] = estima
 
     #def heuristicaCombustivel(self, ):
 
@@ -262,7 +259,7 @@ class Graph:
     #    A*
     ##########################################
 
-    def procura_aStar(self, start, end):
+    def procura_aStar(self, start, end, h):
         # open_list is a list of nodes which have been visited, but who's neighbors
         # haven't all been inspected, starts off with the start node
         # closed_list is a list of nodes which have been visited
@@ -287,7 +284,7 @@ class Graph:
             # find a node with the lowest value of f() - evaluation function
             for v in open_list:
                 ##if n == None or g[v] + self.getH(v) < g[n] + self.getH(n):  # heuristica ver.....
-                if n == None or g[v] + self.getH(v) < g[n] + self.getH(n):  # heuristica ver.....
+                if n == None or g[v] + self.getH(v, h) < g[n] + self.getH(n, h):  # heuristica ver.....
                     n = v
             if n == None:
                 print('Path does not exist!')
@@ -342,7 +339,7 @@ class Graph:
     ##########################################
 
 
-    def greedy(self, start, end):
+    def greedy(self, start, end, h):
         # open_list é uma lista de nodos visitados, mas com vizinhos
         # que ainda não foram todos visitados, começa com o  start
         # closed_list é uma lista de nodos visitados
@@ -360,7 +357,7 @@ class Graph:
 
             # encontra nodo com a menor heuristica
             for v in open_list:
-                if n == None or self.m_h[v] < self.m_h[n]:
+                if n == None or self.getH(v, h) < self.getH(n, h):
                     n = v
 
             if n == None:

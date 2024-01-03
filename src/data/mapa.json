@@ -32,7 +32,7 @@
     {"source": "Avenida Doutor Leonardo Coimbra", "target": "Rua Vitor Pedro", "weight": 19},
     {"source": "Avenida Doutor Leonardo Coimbra", "target": "Rua D. Duarte", "weight": 15}
   ],
-  "heuristics": {
+  "bestpath": {
     "Central": 0,
     "Avenida da Liberdade": 3,
     "Avenida Doutor Leonardo Coimbra": 2,
@@ -53,5 +53,27 @@
     "Rua do Pastor": 23,
     "Rua Vitor Pedro": 20,
     "Rua D. Duarte": 15
+  },
+  "transit": {
+    "Central": 20,
+    "Avenida da Liberdade": 26,
+    "Avenida Doutor Leonardo Coimbra": 31,
+    "Rua de Barros": 14,
+    "Rua Rei Ricardo II": 24,
+    "Rua da Serrinha": 9,
+    "Rua do Cabo": 11,
+    "Rua da Amizade": 21,
+    "Rua do Montejoia": 14,
+    "Rua da Torre": 11,
+    "Rua da Fonte": 2,
+    "Rua da Seara": 4,
+    "Rua dos Canhoes": 9,
+    "Rua do Monte": 8,
+    "Rua da Espadilha": 13,
+    "Rua Gomes de Sa": 6,
+    "Rua de Minhome": 19,
+    "Rua do Pastor": 9,
+    "Rua Vitor Pedro": 19,
+    "Rua D. Duarte": 12
   }
 }

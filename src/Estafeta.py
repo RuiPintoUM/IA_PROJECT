@@ -1,48 +1,78 @@
 class Estafeta:
-    def __init__(self, nome, status, veiculo, numEntregas = 0, somaClassificacoes = 0):
+    def __init__(self, nome, status, veiculo, encPorEntregar = [], numEntregas = 0, somaClassificacoes = 0):
         self.nome = nome
         self.status = status
-        self.numEntregas = numEntregas
         self.veiculo = veiculo
+        self.encPorEntregar = encPorEntregar
+        self.numEntregas = numEntregas
         self.somaClassificacoes = somaClassificacoes
+
+    def getEncomendas(self):
+        return self.encPorEntregar
+
+    def getNumeroEntregas(self):
+        return len(self.encPorEntregar) 
     
-    def tempoBicla(self, distancia):
-        return distancia / 10
+    def getMedAval(self):
+        if (self.numEntregas == 0):
+            return 0
+        else:
+            return self.somaClassificacoes/self.numEntregas
 
-    def tempoMota(self, distancia):
-        return distancia / 35
+    def adicionaEnc(self, idEnc):
+        self.encPorEntregar.append(idEnc)
+    
+    def tempoBicla(self, distancia, peso):
+        return distancia / (10 - 0.6 * peso)
 
-    def tempoCarro(self, distancia):
-        return distancia / 50
+    def tempoMota(self, distancia, peso):
+        return distancia / (35 - 0.5 * peso)
+
+    def tempoCarro(self, distancia, peso):
+        return distancia / (50 - 0.1 * peso)
+    
+    def tempoEncomenda(self, distancia, peso):
+        match self.veiculo:
+            case "bicicleta":
+                return self.tempoBicla(distancia, peso)
+            case "mota":
+                return self.tempoMota(distancia, peso)
+            case "carro":
+                return self.tempoCarro(distancia, peso)
     
     def verficaViabilidade(self, peso, distancia, tempo):
-        if self.veiculo == "bicicleta" and peso < 5 and self.tempoBicla(distancia) < tempo:
-            return True
-        elif self.veiculo == "mota" and peso < 20 and self.tempoMota(distancia) < tempo:
-            return True
-        elif self.veiculo == "carro" and peso < 100 and self.tempoCarro(distancia) < tempo:
-            return True
-        else:
-            return False
+        match self.veiculo:
+            case "bicicleta":  
+                if tempo != 0 and self.tempoBicla(distancia, peso) < tempo:
+                    return -1
 
-    def verificaAddEncomenda(self, encomenda):
-        acumolador = self.somaEncomendas()
+                return 0
+            case "mota": 
+                if tempo != 0 and self.tempoBicla(distancia, peso) < tempo:
+                    return -1
+                
+                return 70 * distancia  
+            case "carro": 
+                if tempo != 0 and self.tempoCarro(distancia, peso) < tempo:
+                    return -1
 
-        acumolador += encomenda.peso
+                return 180 * distancia
 
-        match  self.veiculo:
+
+    def verificaAddEncomenda(self, peso):
+        match self.veiculo:
             case "bicicleta":
-                if acumolador < 5:
+                if peso <= 5:
                     return True
                 else:
                     return False
             case "mota":
-                if acumolador < 20:
+                if peso <= 20:
                     return True
                 else:
                     return False
             case "carro":
-                if acumolador < 100:
+                if peso <= 100:
                     return True
                 else:
                     return False

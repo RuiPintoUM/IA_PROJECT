@@ -8,8 +8,9 @@ import time
 class Sistema:
 
     def __init__(self):     #  construtor do sistema"
-        self.mapEstafetas = {}  # Dicionário para armazenar estafetas
-        self.listaEncomendas = []  # Dicionário para armazenar encomendas
+        self.estafetas = {}  # Dicionário para armazenar estafetas
+        self.encomendas = {}  # Dicionário para armazenar encomendas
+        self.clientes = {}
         self.grafo = Graph()
         self.carregaData()
 
@@ -17,35 +18,102 @@ class Sistema:
         return self.grafo.locationExists(nome)
     
     def novaEncomenda(self, local, peso, volume, tempoPedido, distancia):
-        enc = Encomenda(local, peso, volume, tempoPedido, distancia)
-        self.listaEncomendas.append(enc)
+        if self.encomendas:
+            id = list(self.encomendas.items())[-1][0] + 1
+        else:
+            id = 0
+
+        enc = Encomenda(id, local, peso, volume, tempoPedido, distancia)
+        self.encomendas[id] = enc
         return enc
 
+    def definePreco(self, veiculo, volume, distancia , prazoEntrega):
+        match veiculo:
+            case "bicileta":
+                if prazoEntrega == 0:
+                    return 3 + volume * 0.1 + distancia * 0.02
+                else:
+                    return 3 + volume * 0.1 + distancia * 0.02 + 2
+            case "mota":
+                if prazoEntrega == 0:
+                    return 3 + volume * 0.1 + distancia * 0.0325
+                else:
+                    return 3 + volume * 0.1 + distancia * 0.0325 + 2
+            case "carro":
+                if prazoEntrega == 0:
+                    return 3 + volume * 0.1 + distancia * 0.065
+                else:
+                    return 3 + volume * 0.1 + distancia * 0.065 + 2
+
+    def loginCliente(self, nome):
+        if nome in self.clientes:
+            return True
+        else:
+            return False
+
+    def adicionarCliente(self, nome_cliente):
+        cliente = cliente(nome_cliente)
+        self.clientes[cliente] = cliente
+
+    def getEstafetasParaAvaliar(self, nome_cliente):
+        cliente = this.clientes[nome_cliente]
+        lista_estafetas
+
+        for estafeta_nome in cliente.estafetasPorAvaliar:
+            lista_estafetas.append(self.estafetas[estafeta_nome])
+
+        return lista_estafetas
+        
     def adicionarEstafeta(self, nome_estafeta, status, veiculo):
         estafeta = Estafeta(nome_estafeta, status, veiculo)
-        self.mapEstafetas[nome_estafeta] = estafeta
+        self.estafetas[nome_estafeta] = estafeta
 
     def loginEstafeta(self, nome):
-        if nome in self.mapEstafetas:
+        if nome in self.estafetas:
             return True
         else:
             return False
         
     def estafetaMaisEcologico(self, peso, distancia, tempo):
-        for estafeta in self.mapEstafetas.values():
-            if estafeta.verficaViabilidade(peso, distancia, tempo):
-                pass
+        estafetaEscolhido = None 
+        niveisDeCO2Baixos = -1
+
+        for estafeta in self.estafetas.values():
+            print(f"{estafeta.nome}")
+            if not estafeta.verificaAddEncomenda(peso):
+                continue
+
+            niveisCO2Estafeta = estafeta.verficaViabilidade(peso, distancia, tempo)
+
+            if niveisCO2Estafeta == -1:
+                continue
+            
+            if niveisDeCO2Baixos == -1:
+                estafetaEscolhido = estafeta
+                niveisDeCO2Baixos = niveisCO2Estafeta 
+            else:
+                if niveisCO2Estafeta < niveisDeCO2Baixos:
+                    estafetaEscolhido = estafeta
+                    niveisDeCO2Baixos = niveisCO2Estafeta
+
+                if niveisCO2Estafeta == niveisDeCO2Baixos:
+                    if estafeta.getNumeroEntregas() < estafetaEscolhido.getNumeroEntregas():
+                        estafetaEscolhido = estafeta
+        
+        #print(f"{estafetaEscolhido.nome} estafeta escolhido ")
+        return estafetaEscolhido
             
 
     def guardarData(self):
         map_path = os.path.join('data', 'estafetas.json')
         existing_data = []
 
-        for estafeta in self.mapEstafetas.values():
+        for estafeta in self.estafetas.values():
             new_estafeta_data = {
                 "nome": estafeta.nome,
                 "status": estafeta.status,
                 "veiculo": estafeta.veiculo,
+                "listEnc": estafeta.encPorEntregar,
                 "numEntregas": estafeta.numEntregas,
                 "somaClass": estafeta.somaClassificacoes
             }
@@ -57,8 +125,9 @@ class Sistema:
         encomendas_path = os.path.join('data', 'encomendas.json')
         existing_data = []
 
-        for encomenda in self.listaEncomendas:
+        for encomenda in self.encomendas.values():
             new_encomenda_data = {
+                "id": encomenda.id,
                 "local": encomenda.localChegada,
                 "peso": encomenda.peso,
                 "volume": encomenda.volume,
@@ -69,6 +138,7 @@ class Sistema:
 
         with open(encomendas_path, 'w') as file:
             json.dump(existing_data, file, indent=2)
+
 
     def carregaData(self):
         estafetas_path = os.path.join('data', 'estafetas.json')
@@ -82,38 +152,52 @@ class Sistema:
                     nome=estafeta_data["nome"],
                     status=estafeta_data["status"],
                     veiculo=estafeta_data["veiculo"],
+                    encPorEntregar=estafeta_data["listEnc"],
                     numEntregas=estafeta_data["numEntregas"],
                     somaClassificacoes=estafeta_data["somaClass"]
                 )
-                self.mapEstafetas[estafeta_data["nome"]] = estafeta
+                self.estafetas[estafeta_data["nome"]] = estafeta
 
         with open(encomendas_path, 'r') as encomendas_file:
             encomendas_data = json.load(encomendas_file)
 
             for encomenda_data in encomendas_data:
                 encomenda = Encomenda(
+                    id=encomenda_data["id"],
                     localChegada=encomenda_data["local"],
                     peso=encomenda_data["peso"],
                     volume=encomenda_data["volume"],
                     tempoPedido=encomenda_data["tempo"],
                     distancia=encomenda_data["dist"]
                 )
-                self.listaEncomendas.append(encomenda)
+                self.encomendas[encomenda_data["id"]] = encomenda
 
-    def respostaPosEncomenda(self,encomenda, caminho):
-        print("Caminho: ")
+    def respostaPosEncomenda(self, idEnc, nome, caminho):
+
+        enc = self.getEncomenda(idEnc)
+
         for node in caminho:
             print(str(node))
-        print(f"Encomenda demorou {encomenda.tempoReal} horas a ser entregue.")
-        print(f"Encomenda foi entregue de {encomenda.veiculo}.")
-        print(f"A distancia percorrida foi de {encomenda.distancia}km.")
 
-    def removeEncomenda(self, encomenda):
+        print(f"Encomenda demorou {self.getEstafeta(nome).tempoEncomenda(enc.distancia, enc.peso)} horas a ser entregue.")
+        print(f"Encomenda foi entregue de {self.getEstafeta(nome).veiculo}.")
+        print(f"A distancia percorrida foi de {enc.distancia}km.")
 
-        encomenda.estafeta.status = 0
+    def removeEncomenda(self, idEnc, nome):
+
+        estafeta = self.getEstafeta(nome)
+        estafeta.encPorEntregar.remove(idEnc)
+        del self.encomendas[idEnc]
+        estafeta.numEntregas += 1
+
+    def getEncomenda(self, idEnc):
+        return self.encomendas.get(idEnc)
+
+    def getEstafeta(self, nome):
+        return self.estafetas.get(nome)
 
     def espacoLivreEstafeta(self, nome):
-        estafeta = self.mapEstafetas.get(nome)
+        estafeta = self.estafetas.get(nome)
         espacoOcupado = estafeta.somaEncomendas()
 
         match  estafeta.veiculo:
@@ -127,25 +211,41 @@ class Sistema:
                 return 100 - espacoOcupado
 
     def printanomes(self):
-        for estafeta in self.mapEstafetas.values():
+        for estafeta in self.estafetas.values():
             print(estafeta.nome)
 
-    def executaTrabalho(self, local1, local2, local3):
-        pass
+    def mostrarEncomendasEstafetas(self, nome):
+        estafeta = self.estafetas.get(nome)
 
-    def mostrarEncomendasDisponiveis(self, nome):
-        estafeta = self.mapEstafetas.get(nome)
+        listaEnc = estafeta.getEncomendas()
+        
+        encomendas_string = ""  # String para armazenar informações das encomendas
 
-        listaEncomendas = []
+        for encomendaId in listaEnc:
+            encomenda = self.encomendas.get(encomendaId)
+            if encomenda:
+                encomendas_string += f"ID: {encomenda.id}, Local de Entrega: {encomenda.localChegada}\n"
 
-        for encomenda in self.listaEncomendas:
-            if encomenda.estado == 0 and estafeta.verificaAddEncomenda(encomenda) :
-                listaEncomendas.append(encomenda)
+        print(encomendas_string)
+        return encomendas_string
 
-        return listaEncomendas
+
+    def mostraEncomendasAdmin(self):
+        encStr = ""
+        for enc in self.encomendas.values():
+            encStr += f"ID: {enc.id}, Local de Entrega: {enc.localChegada}, Peso: {enc.peso}\n"
+
+        return encStr
+    
+    def mostrarEstafetasAdmin(self):
+        estStr = ""
+        for est in self.estafetas.values():
+            estStr += f"Nome: {est.nome}, Veiculo: {est.veiculo}, Avaliação: {est.getMedAval()}\n"
+        
+        return estStr
 
     def atribuiEncomenda(self, nome, encomenda):
-        estafeta = self.mapEstafetas.get(nome)
+        estafeta = self.estafetas.get(nome)
 
         encomenda.estado = 1
         estafeta.listaEncomenda.append(encomenda)
@@ -160,15 +260,15 @@ class Sistema:
         print(len(estafeta.encomenda_ids))
         return estafeta.somaClassificacoes / len(estafeta.encomenda_ids)
     
-    def calculaMelhorCaminho(self, local):
+    def calculaMelhorCaminho(self, local, heuristic):
         result_BFS = self.grafo.procura_BFS("Central", local)
-        print(result_BFS)
+        print(f"BFS: {result_BFS}")
         result_DFS = self.grafo.procura_DFS("Central", local)
-        print(result_DFS)
-        result_Greedy = self.grafo.greedy("Central", local)
-        print(result_Greedy)
-        result_Astar = self.grafo.procura_aStar("Central", local)
-        print(result_Astar)
+        print(f"DFS: {result_DFS}")
+        result_Greedy = self.grafo.greedy("Central", local, heuristic)
+        print(f"Greedy: {result_Greedy}")
+        result_Astar = self.grafo.procura_aStar("Central", local, heuristic)
+        print(f"AStar: {result_Astar}")
 
         results = [result_BFS, result_DFS, result_Greedy, result_Astar]
         valid_results = [result for result in results if result is not None]
@@ -183,11 +283,27 @@ class Sistema:
         print("Custo Mínimo:", custoMin)
 
         return min_result
-        
-    def mostrarListaEncomendas(self, nome):
-        estafeta = self.mapEstafetas.get(nome)
-        
-        return estafeta.getEncomendas()
+    
+    ## analisar isto
+    def calculaMelhorCaminhoEntrega(self, local):
+        result_Greedy = self.grafo.greedy("Central", local, "transit")
+        print(result_Greedy)
+        result_Astar = self.grafo.procura_aStar("Central", local, "transit")
+        print(result_Astar)
+
+        results = [result_Greedy, result_Astar]
+        valid_results = [result for result in results if result is not None]
+
+        if not valid_results:
+            return None
+
+        min_result = min(valid_results, key=lambda x: x[1])
+        melhorCaminho, custoMin = min_result
+
+        print("Melhor Caminho:", melhorCaminho)
+        print("Custo Mínimo:", custoMin)
+
+        return min_result
 
     # --- Queries ---
 
