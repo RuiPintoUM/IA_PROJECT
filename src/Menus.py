@@ -234,21 +234,32 @@ def menuEncomendasEstafeta(sistema, nome):
         menuEncomendasEstafeta(sistema, nome)
     
 def menuRankings(sistema, nome):
-    print("1 - Top 5 ranking estafetas com mais entregas efetuadas") 
-    print("2 - Top 5 ranking estafetas com mais entregas ecológicas")
-    print("3 - Top 5 ranking estafetas com melhor rating")
-    print("4 - Sair")
+    print("1 - Top 5 ranking estafetas com melhor avaliação média") 
+    print("2 - Top 5 ranking de estafetas com mais entregas feitas")
+    print("3 - Top 5 ranking de estafetas com mais entregas de carro feitas")
+    print("4 - Top 5 ranking de estafetas com mais entregas de mota feitas")
+    print("5 - Top 5 ranking de estafetas com mais entregas de bicicleta feitas")
+    print("0 - Sair")
 
     user_input = int(input("Introduza a sua opcao-> "))
     match user_input:
         case 1:
-            print()
+            sistema.rankingNumEntregasGeral(nome)
+            menuRankings(sistema, nome)
         case 2:
-            print()
+            sistema.rankingNumEntregasGeral(nome)
+            menuRankings(sistema, nome)
         case 3:
-            print()
+            sistema.rankingNumEntregasCarro(nome)
+            menuRankings(sistema, nome)
         case 4:
-            print(menuEstafeta(sistema, nome))
+            sistema.rankingNumEntregasMota(nome)
+            menuRankings(sistema, nome)
+        case 5:
+            sistema.rankingNumEntregasBicicleta(nome)
+            menuRankings(sistema, nome)           
+        case 0:
+            menuEstafeta(sistema, nome)
         
 def menuAdmin(sistema):
     opcao = -1

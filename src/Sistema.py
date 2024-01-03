@@ -5,7 +5,7 @@ from Encomenda import Encomenda
 from Estafeta import Estafeta
 import time
 
-from src.Cliente import Cliente
+from Cliente import Cliente
 
 
 class Sistema:
@@ -343,22 +343,82 @@ class Sistema:
 
         return min_result
 
-    # --- Queries ---
+    # --- Rankings ---
 
-    def top_ranking_entregas(self):
-        sorted_estafetas = sorted(self.estafetas.items(), key=estafeta.encomenda_ids.len , reverse=True)
-        print(f"Top 5 estafetas com mais entregas efetuadas:")
-        for i, (estafeta, dados) in enumerate(sorted_estafetas[:5], 1):
-            print(f"{i}. {estafeta} - Entregas: {dados['entregas']}")
+    # Ranking de top 5 de estafetas com melhor classificação média
+    def rankingMediaAvaliacao(self, nome_estafeta):
+        sorted_estafetas = sorted(self.estafetas.values(), key=lambda estafeta: estafeta.getMedAval(), reverse=True)
+        position = next((i+1 for i, estafeta in enumerate(sorted_estafetas) if estafeta.nome == nome_estafeta), None)
+        
+        for i, estafeta in enumerate(sorted_estafetas[:5]):
+            print(f"{i+1}. {nome_estafeta} - Média de avaliação: {estafeta.getMedAval()}")
+        
+        print("\n____________________\n")
+        
+        if position is not None:
+            print(f"[{nome_estafeta}], encontras-te na posição nº {position}")
+        else:
+            print(f"Estafeta {nome_estafeta} não encontrado no ranking de média de avaliação")
+            
+    # ranking de estafetas com mais entregas no geral
+    def rankingNumEntregasGeral(self, nome_estafeta):
+        sorted_estafetas = sorted(self.estafetas.values(), key=lambda estafeta: estafeta.numEntregas, reverse=True)
+        position = next((i+1 for i, estafeta in enumerate(sorted_estafetas) if estafeta.nome == nome_estafeta), None)
+        
+        for i, estafeta in enumerate(sorted_estafetas[:5]):
+            print(f"{i+1}. {estafeta.nome} - Número de Entregas: {estafeta.numEntregas}")
+            
+        print("\n____________________\n")
+        
+        if position is not None:
+            print(f"[{nome_estafeta}], encontras-te na posição nº {position}")
+        else:
+            print(f"Estafeta {nome_estafeta} não encontrado no ranking de maior número de entregas")
+            
+    #ranking de numero de entregas de Mota, bicicleta e carro respetivamente
+    def rankingNumEntregasMota(self, nome_estafeta):
+        sorted_estafetas_mota = sorted([estafeta for estafeta in self.estafetas.values if estafeta.veiculo == 'mota'],
+                                       key=lambda estafeta: estafeta.numEntregas, reverse=True)
+        position = next((i + 1 for i, estafeta in sorted_estafetas_mota if estafeta.nome == nome_estafeta), None)
+        
+        for i, estafeta in enumerate(sorted_estafetas_mota[:5]):
+            print(f"{i+1}. {estafeta.nome} - Número de entregas: {estafeta.numEntregas}")
+            
+        print("\n____________________\n")
+        
+        if position is not None:
+            print(f"[{nome_estafeta}], encontras-te na posição nº {position}")
+        else:
+            print(f"Estafeta {nome_estafeta} não encontrado no ranking de maior número de entregas de mota")
+        
+    def rankingNumEntregasBicicleta(self, nome_estafeta):
+        sorted_estafetas_bicicleta = sorted([estafeta for estafeta in self.estafetas.values() if estafeta.veiculo == 'bicicleta'],
+                                            key=lambda estafeta: estafeta.numEntregas, reverse=True)
+        position = next((i + 1 for i, estafeta in enumerate(sorted_estafetas_bicicleta) if estafeta.nome == nome_estafeta), None)
 
-    def top_ranking_ecologicas(self, n=5):
-        sorted_estafetas = sorted(self.estafetas.items(), key=lambda x: x[1]['entregas_ecologicas'], reverse=True)
-        print(f"Top {n} estafetas com mais entregas ecológicas:")
-        for i, (estafeta, dados) in enumerate(sorted_estafetas[:n], start=1):
-            print(f"{i}. {estafeta} - Entregas Ecológicas: {dados['entregas_ecologicas']}")
+        for i, estafeta in enumerate(sorted_estafetas_bicicleta[:5]):
+            print(f"{i + 1}. {estafeta.nome} - Número de Entregas: {estafeta.numEntregas}")
+            
+        print("\n____________________\n")
+            
+        if position is not None:
+            print(f"[{nome_estafeta}], encontras-te na posição nº {position}")
+        else:
+            print(f"Estafeta {nome_estafeta} não encontrado no ranking de maior número de entregas de bicicleta")
 
-    def top_ranking_rating(self, n=5):
-        sorted_estafetas = sorted(self.estafetas.items(), key=lambda x: x[1]['rating'], reverse=True)
-        print(f"Top {n} estafetas com melhor rating:")
-        for i, (estafeta, dados) in enumerate(sorted_estafetas[:n], start=1):
-            print(f"{i}. {estafeta} - Rating: {dados['rating']}")
+
+    def rankingNumEntregasCarro(self, nome_estafeta):
+        sorted_estafetas_carro = sorted([estafeta for estafeta in self.estafetas.values() if estafeta.veiculo == 'carro'],
+                                        key=lambda estafeta: estafeta.numEntregas, reverse=True)
+        position = next((i + 1 for i, estafeta in enumerate(sorted_estafetas_carro) if estafeta.nome == nome_estafeta), None)
+        
+        for i, estafeta in enumerate(sorted_estafetas_carro[:5]):
+            print(f"{i + 1}. {estafeta.nome} - Número de Entregas: {estafeta.numEntregas}")
+            
+        print("\n____________________\n")
+
+        if position is not None:
+            print(f"[{nome_estafeta}], encontras-te na posição nº {position}")
+        else:
+            print(f"Estafeta {nome_estafeta} não encontrado no ranking de maior número de entregas de carro")
+     

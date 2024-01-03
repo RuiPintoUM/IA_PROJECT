@@ -17,7 +17,7 @@ class Estafeta:
         if (self.numEntregas == 0):
             return 0
         else:
-            return self.somaClassificacoes/self.numEntregas
+            return round(self.somaClassificacoes/self.numEntregas, 2)
 
     def adicionaEnc(self, idEnc):
         self.encPorEntregar.append(idEnc)
