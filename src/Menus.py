@@ -158,6 +158,7 @@ def menuClienteFazerEncomenda(sistema, nome):
     if (input(f"O preço da encomenda é {precoformatado}. Deseja aceitar? (S ou N): ").lower() == "s"):
         enc = sistema.novaEncomenda(local, peso, volume, tempoPedido, distancia, nome)
         estafeta.adicionaEnc(enc.id)
+        menuCliente(sistema, nome)
     else:
         menuCliente(sistema, nome)
 
