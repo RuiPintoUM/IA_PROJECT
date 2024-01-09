@@ -158,6 +158,7 @@ def menuClienteFazerEncomenda(sistema, nome):
     if (input(f"O preço da encomenda é {precoformatado}. Deseja aceitar? (S ou N): ").lower() == "s"):
         enc = sistema.novaEncomenda(local, peso, volume, tempoPedido, distancia, nome)
         estafeta.adicionaEnc(enc.id)
+        menuCliente(sistema, nome)
     else:
         menuCliente(sistema, nome)
 
@@ -347,7 +348,7 @@ def menuRankings(sistema, nome):
             menuRankings(sistema, nome)           
         case 0:
             menuEstafeta(sistema, nome)
-        
+            
 def menuAdmin(sistema):
     while True: 
         print("\n--- Menu Administrador ---\n")
@@ -363,6 +364,7 @@ def menuAdmin(sistema):
 
         match opcao:
             case 0:
+                MenuPrincipal(sistema)
                 break
 
             case 1:
